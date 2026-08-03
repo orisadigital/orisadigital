@@ -6,6 +6,7 @@
     "enabled": true
   },
   "assets": {
+    "directory": "./dist",
     // SPA routing: unknown paths serve index.html (replaces a _redirects file,
     // which Workers static assets rejects as an infinite-loop rule).
     "not_found_handling": "single-page-application"
