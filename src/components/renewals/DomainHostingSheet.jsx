@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Save, Globe, Server, KeyRound, FileText } from "lucide-react";
+import { Save, Globe, KeyRound, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";

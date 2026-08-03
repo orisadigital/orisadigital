@@ -3,13 +3,9 @@ import { base44 } from "@/api/base44Client";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-hot-toast";
 import {
-  Building2,
   Plus,
-  Calendar,
-  FileText,
   Phone,
   Clock,
-  ChevronRight,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

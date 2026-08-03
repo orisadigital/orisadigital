@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { addDays, isSameDay, format } from "date-fns";
-import { Bell, CheckCircle2, CalendarClock } from "lucide-react";
+import { addDays, format } from "date-fns";
+import { CheckCircle2, CalendarClock } from "lucide-react";
 import { refreshNotificationCount } from "@/hooks/useNotificationCount";
 
 export default function Notifications() {

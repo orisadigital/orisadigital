@@ -1,6 +1,7 @@
 #env
 .env
 .env.*
+!.env.example
 
 # Logs
 /logs
@@ -31,3 +32,6 @@ dist-ssr
 .vite
 base44/.app.jsonc
 .claude/settings.local.json
+
+# Base44 data exports (contain credentials) — never commit
+migration-data/

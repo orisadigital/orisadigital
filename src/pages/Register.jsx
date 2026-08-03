@@ -28,7 +28,12 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      await base44.auth.register({ email, password });
+      const result = await base44.auth.register({ email, password });
+      if (result?.session) {
+        // Email confirmation disabled in Supabase — signed in immediately.
+        window.location.href = "/";
+        return;
+      }
       setShowOtp(true);
     } catch (err) {
       setError(err.message || "Registration failed");
@@ -67,7 +72,9 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    base44.auth.loginWithProvider("google", "/").catch((err) => {
+      setError(err.message || "Google login is not configured yet");
+    });
   };
 
   if (showOtp) {

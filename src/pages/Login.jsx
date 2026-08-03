@@ -29,7 +29,9 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    base44.auth.loginWithProvider("google", "/").catch((err) => {
+      setError(err.message || "Google login is not configured yet");
+    });
   };
 
   return (

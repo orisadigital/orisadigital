@@ -2,33 +2,37 @@
 
 ## Project Context
 
-This is a Base44 app repository. Treat it as user-owned application code, keep changes focused on the user's request, and preserve existing project conventions.
+Internal CRM/admin app for Orisa Digital. React + Vite frontend backed by
+Supabase (Postgres, Auth, Storage, pg_cron). Formerly a Base44 app — fully
+migrated off Base44; the `base44/` folder is kept only as reference for the
+original entity schemas and functions.
 
-Start with `README.md` for local setup, environment variables, and publish workflow.
+## Architecture
 
-## Base44 References
+- Frontend: React 18 + Vite + Tailwind + shadcn/ui, deployed to Cloudflare Pages.
+- Backend: Supabase — schema lives in `supabase/migrations/` (run in the
+  Supabase SQL editor).
+- `src/api/supabaseClient.js`: the raw Supabase client (env-driven).
+- `src/api/base44Client.js`: Base44-compatible adapter (`base44.entities.X`,
+  `base44.auth.*`, `base44.integrations.*`) backed by Supabase — pages call
+  this; prefer extending the adapter over scattering raw Supabase calls.
+- Roles: `profiles.role` ('admin' | 'user'), auto-created on signup by DB
+  trigger. Role changes happen in SQL/dashboard only (no API path on purpose).
+- Scheduled jobs: `auto_renew_assets()` and `renewal_reminders()` Postgres
+  functions, scheduled with pg_cron (see migration).
 
-- CLI overview: https://docs.base44.com/developers/references/cli/get-started/overview.md
-- Agent skills: https://docs.base44.com/developers/backend/overview/skills.md
+## Environment
 
-If your agent supports Agent Skills, install or update Base44 skills before Base44-specific work:
+`.env` (never commit; see `.env.example`):
 
-```bash
-npx skills add base44/skills
-```
-
-## Key Files
-
-- `src/`: frontend application source.
-- `src/api/base44Client.js`: frontend Base44 SDK client.
-- `vite.config.js`: Vite config and Base44 Vite plugin setup.
-- `.env.local`: local-only environment values; never commit secrets.
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
 
 ## Working Notes
 
-- Use `base44 dev` as the default local development command when you need the local Base44 backend. It can run the backend and frontend together.
-- When docs or code mention the frontend being started automatically, that usually means the Base44 project config includes `site.serveCommand`, for example `"serveCommand": "npm run dev"` in `base44/config.jsonc`.
-- Use `npm run dev` only for frontend-only work against the hosted Base44 backend.
-- Prefer the existing Base44 CLI workflow over adding new npm scripts for Base44-specific tasks.
-- Reuse the existing SDK client and Vite plugin patterns before adding new Base44 integration paths.
-- Run the relevant checks from `package.json` before finishing code changes.
+- `npm run dev` for local development; `npm run build` outputs `dist/` for
+  Cloudflare Pages (SPA fallback via `public/_redirects`).
+- Date-like columns are `text` on purpose: monthly renewals are stored as
+  "MM-DD", other dates as "YYYY-MM-DD". Entity ids are text (Base44 legacy
+  ids coexist with new UUID strings).
+- Run `npm run lint` before finishing code changes.
