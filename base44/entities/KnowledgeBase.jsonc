@@ -1,0 +1,58 @@
+{
+  "name": "KnowledgeBase",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "type": {
+      "type": "string",
+      "title": "Type",
+      "enum": [
+        "qa",
+        "document",
+        "web_page"
+      ],
+      "default": "qa"
+    },
+    "question": {
+      "type": "string",
+      "title": "Question"
+    },
+    "answer": {
+      "type": "string",
+      "title": "Answer"
+    },
+    "content": {
+      "type": "string",
+      "title": "Extracted Content"
+    },
+    "file_url": {
+      "type": "string",
+      "title": "File URL"
+    },
+    "file_name": {
+      "type": "string",
+      "title": "File Name"
+    },
+    "source_url": {
+      "type": "string",
+      "title": "Source URL"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "active",
+        "processing",
+        "failed"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "title",
+    "type"
+  ]
+}

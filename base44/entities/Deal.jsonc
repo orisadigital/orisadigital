@@ -1,0 +1,139 @@
+{
+  "name": "Deal",
+  "type": "object",
+  "properties": {
+    "deal_name": {
+      "type": "string",
+      "title": "Deal Name"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "contact_name": {
+      "type": "string",
+      "title": "Contact Name"
+    },
+    "contact_number": {
+      "type": "string",
+      "title": "Contact Number"
+    },
+    "amount": {
+      "type": "number",
+      "title": "Amount",
+      "default": 0
+    },
+    "stage": {
+      "type": "string",
+      "title": "Stage",
+      "enum": [
+        "online_prospect",
+        "offline_prospect",
+        "contact_made",
+        "meeting_arranged",
+        "presentation_made",
+        "prototype",
+        "on_hold",
+        "closed_won",
+        "closed_lost"
+      ],
+      "default": "online_prospect"
+    },
+    "inquiry_source": {
+      "type": "string",
+      "title": "Inquiry Source",
+      "enum": [
+        "website",
+        "social_media",
+        "referral",
+        "cold_outreach",
+        "door_to_door",
+        "networking"
+      ],
+      "default": "website"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+    },
+    "follow_up_status": {
+      "type": "string",
+      "title": "Follow-Up Status",
+      "enum": [
+        "interested",
+        "thinking",
+        "not_interested",
+        "proposal_sent",
+        "negotiation",
+        "won",
+        "lost",
+        "ghost"
+      ],
+      "default": "interested"
+    },
+    "next_follow_up": {
+      "type": "string",
+      "format": "date",
+      "title": "Next Follow-Up"
+    },
+    "follow_up_notes": {
+      "type": "string",
+      "title": "Follow-Up Notes"
+    }
+  },
+  "required": [
+    "deal_name",
+    "company_name"
+  ],
+  "rls": {
+    "create": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

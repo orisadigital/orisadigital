@@ -1,0 +1,90 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "client_name": {
+      "type": "string",
+      "title": "Client Name"
+    },
+    "contact_position": {
+      "type": "string",
+      "title": "Contact Position"
+    },
+    "contact_email": {
+      "type": "string",
+      "title": "Contact Email"
+    },
+    "contact_number": {
+      "type": "string",
+      "title": "Contact Number"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "company_industry": {
+      "type": "string",
+      "title": "Company Industry"
+    },
+    "company_reg_number": {
+      "type": "string",
+      "title": "Company Reg. No"
+    },
+    "company_website": {
+      "type": "string",
+      "title": "Company Website"
+    },
+    "company_address": {
+      "type": "string",
+      "title": "Company Address"
+    },
+    "amount": {
+      "type": "number",
+      "title": "Sale Amount",
+      "default": 0
+    },
+    "inquiry_source": {
+      "type": "string",
+      "title": "Inquiry Source",
+      "enum": [
+        "website",
+        "social_media",
+        "referral",
+        "cold_outreach",
+        "door_to_door",
+        "networking"
+      ],
+      "default": "website"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "active",
+        "inactive"
+      ],
+      "default": "active"
+    },
+    "converted_from": {
+      "type": "string",
+      "title": "Converted From",
+      "enum": [
+        "prospect",
+        "deal"
+      ],
+      "default": "prospect"
+    },
+    "date_converted": {
+      "type": "string",
+      "format": "date",
+      "title": "Date Converted"
+    }
+  },
+  "required": [
+    "client_name"
+  ]
+}

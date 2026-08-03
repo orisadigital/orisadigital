@@ -1,0 +1,37 @@
+{
+  "name": "FollowUp",
+  "type": "object",
+  "properties": {
+    "prospect_id": {
+      "type": "string",
+      "title": "Prospect ID"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "interested",
+        "thinking",
+        "not_interested",
+        "proposal_sent",
+        "negotiation",
+        "won",
+        "lost",
+        "ghost"
+      ],
+      "default": "interested"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "title": "Date"
+    }
+  },
+  "required": [
+    "prospect_id"
+  ]
+}

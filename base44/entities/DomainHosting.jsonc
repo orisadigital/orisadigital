@@ -1,0 +1,81 @@
+{
+  "name": "DomainHosting",
+  "type": "object",
+  "properties": {
+    "item_name": {
+      "type": "string",
+      "title": "Item Name"
+    },
+    "item_type": {
+      "type": "string",
+      "title": "Type",
+      "enum": [
+        "domain",
+        "hosting"
+      ],
+      "default": "domain"
+    },
+    "provider": {
+      "type": "string",
+      "title": "Provider"
+    },
+    "username": {
+      "type": "string",
+      "title": "Username"
+    },
+    "password": {
+      "type": "string",
+      "title": "Password"
+    },
+    "backup_code": {
+      "type": "string",
+      "title": "Backup Code"
+    },
+    "cost": {
+      "type": "number",
+      "title": "Cost (RM)",
+      "default": 0
+    },
+    "billing_cycle": {
+      "type": "string",
+      "title": "Billing Cycle",
+      "enum": [
+        "monthly",
+        "yearly",
+        "one_time"
+      ],
+      "default": "yearly"
+    },
+    "renewal_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Renewal Date"
+    },
+    "client_id": {
+      "type": "string",
+      "title": "Client ID"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "active",
+        "expiring",
+        "expired",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "item_name"
+  ]
+}

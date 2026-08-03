@@ -1,0 +1,73 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category"
+    },
+    "provider": {
+      "type": "string",
+      "title": "Provider"
+    },
+    "username": {
+      "type": "string",
+      "title": "Username"
+    },
+    "password": {
+      "type": "string",
+      "title": "Password"
+    },
+    "cost": {
+      "type": "number",
+      "title": "Cost (RM)",
+      "default": 0
+    },
+    "billing_cycle": {
+      "type": "string",
+      "title": "Billing Cycle",
+      "enum": [
+        "monthly",
+        "yearly",
+        "3_years",
+        "one_time"
+      ],
+      "default": "monthly"
+    },
+    "renewal_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Renewal Date"
+    },
+    "client_id": {
+      "type": "string",
+      "title": "Client ID"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "active",
+        "expiring",
+        "expired",
+        "cancelled"
+      ],
+      "default": "active"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "name": "Prospect",
+  "type": "object",
+  "properties": {
+    "prospect_name": {
+      "type": "string",
+      "title": "Prospect Name"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "contact_email": {
+      "type": "string",
+      "title": "Contact Email"
+    },
+    "contact_number": {
+      "type": "string",
+      "title": "Contact Number"
+    },
+    "inquiry_source": {
+      "type": "string",
+      "title": "Inquiry Source",
+      "enum": [
+        "website",
+        "social_media",
+        "referral",
+        "cold_outreach",
+        "door_to_door",
+        "networking"
+      ],
+      "default": "website"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "new",
+        "contacted",
+        "qualified",
+        "archived"
+      ],
+      "default": "new"
+    },
+    "date_received": {
+      "type": "string",
+      "format": "date",
+      "title": "Date Received"
+    },
+    "follow_up_status": {
+      "type": "string",
+      "title": "Follow-Up Status",
+      "enum": [
+        "interested",
+        "thinking",
+        "not_interested",
+        "proposal_sent",
+        "negotiation",
+        "won",
+        "lost",
+        "ghost"
+      ],
+      "default": "interested"
+    },
+    "next_follow_up": {
+      "type": "string",
+      "format": "date",
+      "title": "Next Follow-Up"
+    },
+    "follow_up_notes": {
+      "type": "string",
+      "title": "Follow-Up Notes"
+    }
+  },
+  "required": [
+    "prospect_name",
+    "contact_email"
+  ]
+}

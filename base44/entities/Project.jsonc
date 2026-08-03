@@ -1,0 +1,174 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "title": "Project Name"
+    },
+    "client_id": {
+      "type": "string",
+      "title": "Client ID"
+    },
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "person_in_charge": {
+      "type": "string",
+      "title": "Person In Charge"
+    },
+    "contact_number": {
+      "type": "string",
+      "title": "Contact Number"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "sale_amount": {
+      "type": "number",
+      "title": "Sale Amount",
+      "default": 0
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "title": "Is Recurring Sale",
+      "default": false
+    },
+    "recurring_amount": {
+      "type": "number",
+      "title": "Recurring Amount",
+      "default": 0
+    },
+    "recurring_cycle": {
+      "type": "string",
+      "title": "Recurring Cycle",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "yearly"
+      ],
+      "default": "monthly"
+    },
+    "domain_names": {
+      "type": "array",
+      "title": "Domain Names",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "webmaster_email": {
+      "type": "string",
+      "title": "Webmaster Email"
+    },
+    "webmaster_username": {
+      "type": "string",
+      "title": "Webmaster Username"
+    },
+    "webmaster_password": {
+      "type": "string",
+      "title": "Webmaster Password"
+    },
+    "domain_name": {
+      "type": "string",
+      "title": "Domain"
+    },
+    "domain_name_other": {
+      "type": "string",
+      "title": "Domain Provider (Other)"
+    },
+    "domain_username": {
+      "type": "string",
+      "title": "Domain Username"
+    },
+    "domain_password": {
+      "type": "string",
+      "title": "Domain Password"
+    },
+    "domain_backup_code": {
+      "type": "string",
+      "title": "Domain Backup Code"
+    },
+    "hosting_name": {
+      "type": "string",
+      "title": "Hosting"
+    },
+    "hosting_name_other": {
+      "type": "string",
+      "title": "Hosting Provider (Other)"
+    },
+    "hosting_username": {
+      "type": "string",
+      "title": "Hosting Username"
+    },
+    "hosting_password": {
+      "type": "string",
+      "title": "Hosting Password"
+    },
+    "hosting_backup_code": {
+      "type": "string",
+      "title": "Hosting Backup Code"
+    },
+    "cpanel_username": {
+      "type": "string",
+      "title": "cPanel Username"
+    },
+    "cpanel_password": {
+      "type": "string",
+      "title": "cPanel Password"
+    },
+    "wp_admin1_username": {
+      "type": "string",
+      "title": "WP Admin 1 Username"
+    },
+    "wp_admin1_password": {
+      "type": "string",
+      "title": "WP Admin 1 Password"
+    },
+    "wp_admin2_username": {
+      "type": "string",
+      "title": "WP Admin 2 Username"
+    },
+    "wp_admin2_password": {
+      "type": "string",
+      "title": "WP Admin 2 Password"
+    },
+    "wp_client_username": {
+      "type": "string",
+      "title": "WP Client Username"
+    },
+    "wp_client_password": {
+      "type": "string",
+      "title": "WP Client Password"
+    },
+    "domain_expiry_date": {
+      "type": "string",
+      "title": "Domain Expiry Date"
+    },
+    "hosting_expiry_date": {
+      "type": "string",
+      "title": "Hosting Expiry Date"
+    },
+    "delivery_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Delivery Date"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "active",
+        "on_hold",
+        "completed",
+        "cancelled"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "project_name"
+  ]
+}

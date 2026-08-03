@@ -1,0 +1,59 @@
+{
+  "description": "Advances renewal dates for Domains & Hosting, Plugins, and Subscriptions when their yearly / 3-year cycle has passed, and creates reminder notifications before monthly (7/3/1 days) and yearly (30/14/7/3 days) Software & Subscription renewals expire.",
+  "name": "Auto-Renew Assets",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "auto_renew_assets",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "renew": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "autoRenewAssets",
+            "args": {}
+          },
+          "then": "remind",
+          "x-base44": {
+            "title": "Auto-renew due assets",
+            "description": "Domains, Plugins, Subscriptions"
+          }
+        }
+      },
+      {
+        "remind": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "renewalReminders",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Send renewal reminders",
+            "description": "Notify before monthly (7/3/1d) and yearly (30/14/7/3d) Software & Subscription renewals expire"
+          }
+        }
+      }
+    ]
+  },
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 0 * * *",
+      "one_time_date": null,
+      "timezone": "Asia/Kuala_Lumpur",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}
