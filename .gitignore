@@ -35,3 +35,6 @@ base44/.app.jsonc
 
 # Base44 data exports (contain credentials) — never commit
 migration-data/
+
+# Wrangler (Cloudflare) local state
+.wrangler/
