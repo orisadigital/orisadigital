@@ -136,8 +136,8 @@ const auth = {
     if (redirectUrl) window.location.href = '/login';
   },
 
-  redirectToLogin() {
-    window.location.href = '/login';
+  redirectToLogin(next) {
+    window.location.href = next ? `/login?next=${encodeURIComponent(next)}` : '/login';
   },
 };
 

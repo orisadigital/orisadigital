@@ -17,10 +17,11 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const { isLoadingAuth, isLoadingPublicSettings, authChecked, authError, navigateToLogin } = useAuth();
 
-  // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  // Spinner only on the very first auth check — later revalidations must keep the
+  // tree mounted, otherwise every page remounts and loses its state.
+  if (isLoadingPublicSettings || (isLoadingAuth && !authChecked)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
@@ -50,7 +51,7 @@ const AuthenticatedApp = () => {
       <Route path="/" element={<Navigate to="/admin" replace />} />
       <Route path="/website-design-client-brief" element={<WebsiteDesignClientBrief />} />
       <Route path="/webdesign-calculator" element={<WebDesignCalculator />} />
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+      <Route element={<ProtectedRoute redirectTo="/login" />}>
         <Route path="/admin" element={<AdminDashboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />

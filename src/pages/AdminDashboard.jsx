@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { LayoutDashboard, Bell, Calendar as CalendarIcon, Filter, UserPlus, FolderKanban, FileText, Receipt, Users, BookOpen, Globe, Package, Boxes } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
@@ -83,8 +84,24 @@ NAV_GROUPS.forEach((g) => g.items.forEach((item) => {
   item.label = PAGES[item.id].label;
 }));
 
+const DEFAULT_PAGE = "dashboard";
+
 export default function AdminDashboard() {
-  const [activePage, setActivePage] = useState("dashboard");
+  // The active page lives in the URL (/admin?page=projects) so reloads and
+  // browser back/forward land where the user left off.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pageParam = searchParams.get("page");
+  const activePage = pageParam && PAGES[pageParam] ? pageParam : DEFAULT_PAGE;
+
+  useEffect(() => {
+    if (pageParam && !PAGES[pageParam]) {
+      setSearchParams({ page: DEFAULT_PAGE }, { replace: true });
+    }
+  }, [pageParam, setSearchParams]);
+
+  const handleNavigate = useCallback((pageId) => {
+    setSearchParams({ page: pageId });
+  }, [setSearchParams]);
 
   const [collapsed, setCollapsed] = useState(false);
 
@@ -126,7 +143,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-slate-50">
         <AdminSidebar
           activePage={activePage}
-          onNavigate={setActivePage}
+          onNavigate={handleNavigate}
           collapsed={collapsed}
           onToggleCollapse={() => setCollapsed((c) => !c)}
           navGroups={NAV_GROUPS}
