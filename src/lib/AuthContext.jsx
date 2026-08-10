@@ -11,9 +11,11 @@ export const AuthProvider = ({ children }) => {
   const [authError, setAuthError] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
 
-  const checkUserAuth = useCallback(async () => {
+  // `silent` revalidates in the background without flipping isLoadingAuth, so the
+  // app tree stays mounted (a spinner swap here remounts pages and loses their state).
+  const checkUserAuth = useCallback(async ({ silent = false } = {}) => {
     try {
-      setIsLoadingAuth(true);
+      if (!silent) setIsLoadingAuth(true);
       const currentUser = await base44.auth.me();
       setUser(currentUser);
       setIsAuthenticated(true);
@@ -22,7 +24,7 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setIsAuthenticated(false);
     } finally {
-      setIsLoadingAuth(false);
+      if (!silent) setIsLoadingAuth(false);
       setAuthChecked(true);
     }
   }, []);
@@ -31,7 +33,8 @@ export const AuthProvider = ({ children }) => {
     checkUserAuth();
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        checkUserAuth();
+        // Supabase re-emits these on tab focus/token refresh — revalidate silently.
+        checkUserAuth({ silent: true });
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
         setIsAuthenticated(false);
@@ -47,8 +50,8 @@ export const AuthProvider = ({ children }) => {
     await base44.auth.logout(shouldRedirect ? '/login' : undefined);
   };
 
-  const navigateToLogin = () => {
-    base44.auth.redirectToLogin();
+  const navigateToLogin = (next) => {
+    base44.auth.redirectToLogin(next);
   };
 
   return (

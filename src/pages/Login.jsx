@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { safeNext } from "@/lib/nextParam";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +14,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  // Where the user was headed before being bounced here (?next=/admin%3Fpage%3Dinvoices).
+  const next = safeNext(useLocation().search);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,7 +23,7 @@ export default function Login() {
     setLoading(true);
     try {
       await base44.auth.loginViaEmailPassword(email, password);
-      window.location.href = "/";
+      window.location.href = next;
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {
@@ -29,7 +32,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/").catch((err) => {
+    base44.auth.loginWithProvider("google", next).catch((err) => {
       setError(err.message || "Google login is not configured yet");
     });
   };
