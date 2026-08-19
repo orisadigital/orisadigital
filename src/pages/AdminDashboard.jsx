@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { LayoutDashboard, Bell, Calendar as CalendarIcon, Filter, UserPlus, FolderKanban, FileText, Receipt, Users, BookOpen, Globe, Package, Boxes } from "lucide-react";
+import { LayoutDashboard, Bell, Calendar as CalendarIcon, Filter, UserPlus, FolderKanban, FileText, Receipt, Users, BookOpen, Globe, Package, Boxes, Banknote } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import Dashboard from "@/pages/admin/Dashboard";
@@ -14,6 +14,7 @@ import Documents from "@/pages/admin/Documents";
 import Quotations from "@/pages/admin/Quotations";
 import Invoices from "@/pages/admin/Invoices";
 import KnowledgeBase from "@/pages/admin/KnowledgeBase";
+import Payroll from "@/pages/admin/Payroll";
 import DomainHosting from "@/pages/admin/DomainHosting";
 import SoftwarePlugin from "@/pages/admin/SoftwarePlugin";
 import Subscription from "@/pages/admin/Subscription";
@@ -29,6 +30,7 @@ const PAGES = {
   client: { label: "Clients", Component: Client, Icon: UserPlus },
   projects: { label: "Projects", Component: Projects, Icon: FolderKanban },
   documents: { label: "Documents", Component: Documents, Icon: FileText },
+  payroll: { label: "Payroll", Component: Payroll, Icon: Banknote },
   quotations: { label: "Quotations", Component: Quotations, Icon: FileText },
   invoices: { label: "Invoices", Component: Invoices, Icon: Receipt },
   domain_hosting: { label: "Domains & Hosting", Component: DomainHosting, Icon: Globe },
@@ -59,6 +61,12 @@ const NAV_GROUPS = [
       { id: "client" },
       { id: "projects" },
       { id: "documents" },
+    ],
+  },
+  {
+    label: "HR",
+    items: [
+      { id: "payroll" },
     ],
   },
   {

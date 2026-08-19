@@ -11,6 +11,7 @@ const TABLES = {
   DomainHosting: 'domain_hosting',
   FollowUp: 'follow_ups',
   KnowledgeBase: 'knowledge_base',
+  Payroll: 'payroll',
   SoftwarePlugin: 'software_plugins',
   Subscription: 'subscriptions',
   Task: 'tasks',
