@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import ClientEditSheet from "@/components/clients/ClientEditSheet";
 import ClientAddSheet from "@/components/clients/ClientAddSheet";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 const STATUS_STYLES = {
   active: "bg-emerald-100 text-emerald-700 border-emerald-200",
@@ -33,6 +34,7 @@ const SOURCE_STYLES = {
 export default function Client() {
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [editingClient, setEditingClient] = useState(null);
   const [addingClient, setAddingClient] = useState(false);
 
@@ -43,6 +45,7 @@ export default function Client() {
         setClients(data);
       } catch (e) {
         console.error("Failed to load clients", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -103,6 +106,8 @@ export default function Client() {
 
   return (
     <div className="space-y-4">
+      <LoadErrorBanner label="clients" error={loadError} />
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <UserPlus className="h-5 w-5 text-slate-400" />
@@ -110,7 +115,7 @@ export default function Client() {
             {clients.length} client{clients.length !== 1 ? "s" : ""}
           </span>
         </div>
-        <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAddingClient(true)}>
+        <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAddingClient(true)} disabled={Boolean(loadError)}>
           <Plus className="h-3.5 w-3.5" />
           Add Client
         </Button>

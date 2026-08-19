@@ -14,6 +14,7 @@ import { Filter, Users, UserPlus, FolderKanban, TrendingUp, Phone } from "lucide
 import StatCard from "@/components/dashboard/StatCard";
 import SalesAssistantChat from "@/components/dashboard/SalesAssistantChat";
 import { PIPELINE_STAGES, STAGE_COLORS, DEAL_SOURCES } from "@/components/pipeline/pipelineStages";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 const SOURCE_LABELS = Object.fromEntries(DEAL_SOURCES.map((s) => [s.value, s.label]));
 
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const [clients, setClients] = useState([]);
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     const load = async () => {
@@ -39,6 +41,7 @@ export default function Dashboard() {
         setProjects(pr);
       } catch (e) {
         console.error("Failed to load dashboard data", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -103,6 +106,8 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      <LoadErrorBanner label="dashboard data" error={loadError} />
+
       <SalesAssistantChat />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

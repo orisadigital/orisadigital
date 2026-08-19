@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import CalendarPanel from "@/components/calendar/CalendarPanel";
 import TaskList from "@/components/calendar/TaskList";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Calendar() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   const loadTasks = async () => {
     try {
@@ -13,6 +15,7 @@ export default function Calendar() {
       setTasks(data);
     } catch (e) {
       console.error("Failed to load tasks", e);
+      setLoadError(e?.message || "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -57,25 +60,29 @@ export default function Calendar() {
   const pendingTasks = tasks.filter((t) => !t.is_completed);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 h-full">
-      <div className="lg:col-span-4 h-full">
-        <CalendarPanel
-          tasks={tasks}
-          onAddTask={handleAddTask}
-          onComplete={handleComplete}
-          onUpdate={handleUpdate}
-          onDelete={handleDelete}
-        />
+    <>
+      <LoadErrorBanner label="tasks" error={loadError} className="mb-4" />
+
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 h-full">
+        <div className="lg:col-span-4 h-full">
+          <CalendarPanel
+            tasks={tasks}
+            onAddTask={handleAddTask}
+            onComplete={handleComplete}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+          />
+        </div>
+        <div className="lg:col-span-1 h-full">
+          <TaskList
+            tasks={pendingTasks}
+            onComplete={handleComplete}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+            onAddTask={handleAddTask}
+          />
+        </div>
       </div>
-      <div className="lg:col-span-1 h-full">
-        <TaskList
-          tasks={pendingTasks}
-          onComplete={handleComplete}
-          onUpdate={handleUpdate}
-          onDelete={handleDelete}
-          onAddTask={handleAddTask}
-        />
-      </div>
-    </div>
+    </>
   );
 }
