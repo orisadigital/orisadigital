@@ -26,6 +26,7 @@ import PayrollAddSheet from "@/components/hr/PayrollAddSheet";
 export default function Payroll() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [editingRecord, setEditingRecord] = useState(null);
   const [addingRecord, setAddingRecord] = useState(false);
 
@@ -35,7 +36,11 @@ export default function Payroll() {
         const data = await base44.entities.Payroll.list("-pay_period");
         setRecords(data);
       } catch (e) {
+        // Keep the reason on screen rather than only in the console: an empty
+        // list and an unreadable one look identical otherwise, and writing is
+        // pointless while reading fails.
         console.error("Failed to load payroll", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -104,13 +109,25 @@ export default function Payroll() {
         <div className="flex items-center gap-2">
           <Banknote className="h-5 w-5 text-slate-400" />
           <span className="text-sm text-slate-500">
-            {records.length} record{records.length !== 1 ? "s" : ""}
-            {pendingTotal > 0 && (
-              <span className="text-slate-400"> · {fmtRM(pendingTotal)} pending</span>
+            {loadError ? (
+              "Unavailable"
+            ) : (
+              <>
+                {records.length} record{records.length !== 1 ? "s" : ""}
+                {pendingTotal > 0 && (
+                  <span className="text-slate-400"> · {fmtRM(pendingTotal)} pending</span>
+                )}
+              </>
             )}
           </span>
         </div>
-        <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAddingRecord(true)}>
+        <Button
+          size="sm"
+          className="bg-slate-900 hover:bg-slate-800"
+          onClick={() => setAddingRecord(true)}
+          disabled={Boolean(loadError)}
+          title={loadError ? "Payroll records could not be loaded" : undefined}
+        >
           <Plus className="h-3.5 w-3.5" />
           Add Record
         </Button>
@@ -132,7 +149,16 @@ export default function Payroll() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {records.length === 0 ? (
+            {loadError ? (
+              <TableRow>
+                <TableCell colSpan={9} className="text-center py-12">
+                  <p className="text-sm font-medium text-slate-600">
+                    Could not load payroll records
+                  </p>
+                  <p className="text-xs text-slate-400 mt-1">{loadError}</p>
+                </TableCell>
+              </TableRow>
+            ) : records.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={9} className="text-center py-12 text-slate-400">
                   No payroll records yet. Add one to get started.
