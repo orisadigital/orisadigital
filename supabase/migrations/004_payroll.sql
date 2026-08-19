@@ -52,3 +52,13 @@ alter table public.payroll enable row level security;
 drop policy if exists "authenticated full access" on public.payroll;
 create policy "authenticated full access" on public.payroll
   for all to authenticated using (true) with check (true);
+
+-- PostgREST answers from a cached copy of the schema. Until it reloads, a table
+-- that genuinely exists still returns
+--   PGRST205: Could not find the table 'public.payroll' in the schema cache
+-- which is indistinguishable from never having created it. Supabase usually
+-- reloads on its own, but not always promptly — so ask explicitly.
+notify pgrst, 'reload schema';
+
+-- Confirms the table is really there. Expected result: payroll
+select to_regclass('public.payroll');
