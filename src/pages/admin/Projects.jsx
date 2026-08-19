@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import ProjectAddSheet from "@/components/projects/ProjectAddSheet";
 import ProjectsSummary from "@/components/projects/ProjectsSummary";
 import RecurringProjectsTable from "@/components/projects/RecurringProjectsTable";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 const STATUS_STYLES = {
   active: "bg-emerald-100 text-emerald-700 border-emerald-200",
@@ -46,6 +47,7 @@ export default function Projects() {
   const [projects, setProjects] = useState([]);
   const [clientSourceMap, setClientSourceMap] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
 
@@ -67,6 +69,7 @@ export default function Projects() {
         );
       } catch (e) {
         console.error("Failed to load projects", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -131,9 +134,11 @@ export default function Projects() {
 
   return (
     <div className="space-y-4">
+      <LoadErrorBanner label="projects" error={loadError} />
+
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900">Projects</h2>
-        <Button size="sm" onClick={handleAddClick} className="bg-slate-900 hover:bg-slate-800">
+        <Button size="sm" onClick={handleAddClick} className="bg-slate-900 hover:bg-slate-800" disabled={Boolean(loadError)}>
           <Plus className="h-4 w-4" />
           Add Project
         </Button>

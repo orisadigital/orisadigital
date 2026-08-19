@@ -14,10 +14,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import SubscriptionSheet from "@/components/renewals/SubscriptionSheet";
 import { RENEWAL_STATUS_STYLES, CYCLE_LABELS, fmtRM, formatRenewalDate, daysUntilRenewal } from "@/components/renewals/shared";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Subscription() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [editing, setEditing] = useState(null);
   const [adding, setAdding] = useState(false);
 
@@ -27,6 +29,7 @@ export default function Subscription() {
       setItems(data);
     } catch (e) {
       console.error("Failed to load subscriptions", e);
+      setLoadError(e?.message || "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -79,6 +82,8 @@ export default function Subscription() {
 
   return (
     <div className="space-y-4">
+      <LoadErrorBanner label="subscriptions" error={loadError} />
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Boxes className="h-5 w-5 text-slate-400" />
@@ -86,7 +91,7 @@ export default function Subscription() {
             {items.length} subscription{items.length !== 1 ? "s" : ""}
           </span>
         </div>
-        <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAdding(true)}>
+        <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAdding(true)} disabled={Boolean(loadError)}>
           <Plus className="h-3.5 w-3.5" />
           Add Subscription
         </Button>

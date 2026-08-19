@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 const TABS = [
   { id: "qa", label: "Q&A Pairs", Icon: HelpCircle },
@@ -26,6 +27,7 @@ const TABS = [
 export default function KnowledgeBase() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [tab, setTab] = useState("qa");
 
   // Q&A form
@@ -48,6 +50,7 @@ export default function KnowledgeBase() {
       setItems(data);
     } catch (e) {
       console.error("Failed to load knowledge base", e);
+      setLoadError(e?.message || "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -183,6 +186,8 @@ export default function KnowledgeBase() {
 
   return (
     <div className="space-y-6">
+      <LoadErrorBanner label="knowledge base" error={loadError} />
+
       <div>
         <h2 className="text-lg font-semibold text-slate-900">Knowledge Base</h2>
         <p className="text-sm text-slate-500">

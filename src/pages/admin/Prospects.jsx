@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 const STATUS_STYLES = {
   new: "bg-blue-100 text-blue-700 border-blue-200",
@@ -62,6 +63,7 @@ export default function Prospects() {
   const [prospects, setProspects] = useState([]);
   const [followUpCounts, setFollowUpCounts] = useState({});
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
 
   const visibleProspects = statusFilter === "all"
@@ -107,6 +109,7 @@ export default function Prospects() {
         setProspects(all);
       } catch (e) {
         console.error("Failed to load prospects", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -223,6 +226,8 @@ export default function Prospects() {
 
   return (
     <div className="space-y-4">
+      <LoadErrorBanner label="prospects" error={loadError} />
+
       <FollowUpStatusLegend active={statusFilter} onSelect={setStatusFilter} />
 
       {/* Prospect list */}

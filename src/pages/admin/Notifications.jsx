@@ -3,10 +3,12 @@ import { base44 } from "@/api/base44Client";
 import { addDays, format } from "date-fns";
 import { CheckCircle2, CalendarClock } from "lucide-react";
 import { refreshNotificationCount } from "@/hooks/useNotificationCount";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Notifications() {
   const [reminders, setReminders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [completingId, setCompletingId] = useState(null);
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export default function Notifications() {
         setReminders(filtered);
       } catch (e) {
         console.error("Failed to load notifications", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -42,6 +45,8 @@ export default function Notifications() {
 
   return (
     <div>
+      <LoadErrorBanner label="notifications" error={loadError} className="mb-4" />
+
       <h1 className="text-2xl font-semibold text-slate-900">Notifications</h1>
       <p className="mt-1 text-sm text-slate-500">
         Tasks due tomorrow or overdue

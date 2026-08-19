@@ -4,10 +4,12 @@ import AddDealForm from "@/components/pipeline/AddDealForm";
 import DealsThisQuarter from "@/components/pipeline/DealsThisQuarter";
 import StageDistribution from "@/components/pipeline/StageDistribution";
 import KanbanBoard from "@/components/pipeline/KanbanBoard";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Pipeline() {
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
 
   useEffect(() => {
     const loadDeals = async () => {
@@ -16,6 +18,7 @@ export default function Pipeline() {
         setDeals(data);
       } catch (e) {
         console.error("Failed to load deals", e);
+        setLoadError(e?.message || "Unknown error");
       } finally {
         setLoading(false);
       }
@@ -57,6 +60,8 @@ export default function Pipeline() {
 
   return (
     <div className="space-y-6">
+      <LoadErrorBanner label="deals" error={loadError} />
+
       {/* Row 1: Add Deal Form + Deals This Quarter Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1">

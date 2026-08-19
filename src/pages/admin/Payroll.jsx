@@ -22,6 +22,7 @@ import {
 } from "@/components/hr/shared";
 import PayrollEditSheet from "@/components/hr/PayrollEditSheet";
 import PayrollAddSheet from "@/components/hr/PayrollAddSheet";
+import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Payroll() {
   const [records, setRecords] = useState([]);
@@ -105,6 +106,8 @@ export default function Payroll() {
 
   return (
     <div className="space-y-4">
+      <LoadErrorBanner label="payroll records" error={loadError} />
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Banknote className="h-5 w-5 text-slate-400" />
@@ -151,11 +154,8 @@ export default function Payroll() {
           <TableBody>
             {loadError ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-12">
-                  <p className="text-sm font-medium text-slate-600">
-                    Could not load payroll records
-                  </p>
-                  <p className="text-xs text-slate-400 mt-1">{loadError}</p>
+                <TableCell colSpan={9} className="text-center py-12 text-slate-400">
+                  No records to show.
                 </TableCell>
               </TableRow>
             ) : records.length === 0 ? (
