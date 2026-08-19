@@ -11,6 +11,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import WebsiteDesignClientBrief from './pages/WebsiteDesignClientBrief';
 import WebDesignCalculator from './pages/WebDesignCalculator';
 import AdminDashboard from './pages/AdminDashboard';
+import MarketerDashboard from './pages/MarketerDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ForgotPassword from './pages/ForgotPassword';
@@ -53,6 +54,7 @@ const AuthenticatedApp = () => {
       <Route path="/webdesign-calculator" element={<WebDesignCalculator />} />
       <Route element={<ProtectedRoute redirectTo="/login" />}>
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/marketer" element={<MarketerDashboard />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
