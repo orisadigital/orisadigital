@@ -5,7 +5,7 @@ import { useNotificationCount } from "@/hooks/useNotificationCount";
 
 const LOGO_URL = "https://media.base44.com/images/public/6a66c1df72f6ed66012dc483/10620f056_3.jpg";
 
-export default function AdminSidebar({ activePage, onNavigate, collapsed, onToggleCollapse, navGroups = [], subtitle = "Admin Dashboard", userEmail, onSignOut, onSignIn }) {
+export default function AdminSidebar({ activePage, onNavigate, collapsed, onToggleCollapse, navGroups = [], userEmail, onSignOut, onSignIn }) {
   const { count } = useNotificationCount();
   return (
     <aside
@@ -20,7 +20,7 @@ export default function AdminSidebar({ activePage, onNavigate, collapsed, onTogg
         {!collapsed && (
           <div className="min-w-0">
             <p className="text-sm font-semibold text-slate-900 truncate">Orisa Digital</p>
-            <p className="text-xs text-slate-500 truncate">{subtitle}</p>
+            <p className="text-xs text-slate-500 truncate">Admin Dashboard</p>
           </div>
         )}
       </div>
