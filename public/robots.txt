@@ -1,0 +1,3 @@
+# Internal app — not for public search results.
+User-agent: *
+Disallow: /
