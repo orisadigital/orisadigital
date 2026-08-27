@@ -23,6 +23,9 @@ export default function AccountSettings() {
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
   const [saving, setSaving] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  const [sessionsMsg, setSessionsMsg] = useState("");
+  const [sessionsError, setSessionsError] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
@@ -61,6 +64,20 @@ export default function AccountSettings() {
       setError(err.message || "Could not change password");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSignOutOthers = async () => {
+    setSessionsMsg("");
+    setSessionsError("");
+    setSigningOut(true);
+    try {
+      await base44.auth.signOutOtherDevices();
+      setSessionsMsg("Signed out everywhere else. This device is still signed in.");
+    } catch (err) {
+      setSessionsError(err.message || "Could not sign out other devices");
+    } finally {
+      setSigningOut(false);
     }
   };
 
@@ -130,6 +147,33 @@ export default function AccountSettings() {
             </Button>
           </div>
         </form>
+      </div>
+
+      <div className="border border-slate-200 bg-white p-5">
+        <p className="text-sm font-medium text-slate-600">Other Devices</p>
+        <p className="mt-1 text-xs text-slate-400">
+          Signs out every other browser and device. This one stays signed in.
+          Changing your password does not do this on its own.
+        </p>
+
+        {sessionsError && (
+          <div className="mt-4 p-3 bg-destructive/10 text-destructive text-sm">{sessionsError}</div>
+        )}
+        {sessionsMsg && (
+          <div className="mt-4 p-3 bg-emerald-50 text-emerald-700 text-sm">{sessionsMsg}</div>
+        )}
+
+        <div className="mt-4">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={handleSignOutOthers}
+            disabled={signingOut}
+          >
+            {signingOut ? "Signing out..." : "Sign Out Other Devices"}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -137,7 +137,7 @@ export default function WebsiteDesignClientBrief() {
     setSubmitError("");
     try {
       const signatureDataUrl = signatureRef.current?.getDataURL();
-      const doc = generateBriefPDF(formData, signatureDataUrl);
+      const doc = await generateBriefPDF(formData, signatureDataUrl);
       const pdfBlob = doc.output("blob");
       const file = new File([pdfBlob], "website-design-brief.pdf", { type: "application/pdf" });
       const { file_url } = await base44.integrations.Core.UploadFile({ file });

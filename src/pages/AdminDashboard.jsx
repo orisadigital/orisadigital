@@ -1,19 +1,19 @@
-import React, { useEffect, useCallback } from "react";
+import React, { lazy, Suspense, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "@/lib/AuthContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import Dashboard from "@/pages/admin/Dashboard";
-import Notifications from "@/pages/admin/Notifications";
-import Calendar from "@/pages/admin/Calendar";
-import Pipeline from "@/pages/admin/Pipeline";
-import Prospects from "@/pages/admin/Prospects";
-import Client from "@/pages/admin/Client";
-import Projects from "@/pages/admin/Projects";
-import Payroll from "@/pages/admin/Payroll";
-import DomainHosting from "@/pages/admin/DomainHosting";
-import SoftwarePlugin from "@/pages/admin/SoftwarePlugin";
-import Subscription from "@/pages/admin/Subscription";
-import AccountSettings from "@/pages/admin/AccountSettings";
+const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const Notifications = lazy(() => import("@/pages/admin/Notifications"));
+const Calendar = lazy(() => import("@/pages/admin/Calendar"));
+const Pipeline = lazy(() => import("@/pages/admin/Pipeline"));
+const Prospects = lazy(() => import("@/pages/admin/Prospects"));
+const Client = lazy(() => import("@/pages/admin/Client"));
+const Projects = lazy(() => import("@/pages/admin/Projects"));
+const Payroll = lazy(() => import("@/pages/admin/Payroll"));
+const DomainHosting = lazy(() => import("@/pages/admin/DomainHosting"));
+const SoftwarePlugin = lazy(() => import("@/pages/admin/SoftwarePlugin"));
+const Subscription = lazy(() => import("@/pages/admin/Subscription"));
+const AccountSettings = lazy(() => import("@/pages/admin/AccountSettings"));
 
 const PAGES = {
   dashboard: { label: "Dashboard", Component: Dashboard },
@@ -149,7 +149,15 @@ export default function AdminDashboard() {
             <p className="text-xs text-slate-400 uppercase tracking-wider">Orisa Digital Admin</p>
             <h1 className="text-2xl font-semibold text-slate-900">{label}</h1>
           </div>
-          <Component key={activePage} />
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-20">
+                <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+              </div>
+            }
+          >
+            <Component key={activePage} />
+          </Suspense>
         </main>
       </div>
     </div>

@@ -1,6 +1,8 @@
-import { jsPDF } from "jspdf";
-
-export function generateBriefPDF(formData, signatureDataUrl) {
+// jsPDF (and the html2canvas it drags in) is ~360 kB and is only needed when
+// somebody actually submits the brief, so it is loaded at call time rather
+// than shipped to every visitor including the login page.
+export async function generateBriefPDF(formData, signatureDataUrl) {
+  const { jsPDF } = await import("jspdf");
   const doc = new jsPDF();
   let y = 20;
 

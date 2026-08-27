@@ -148,6 +148,14 @@ const auth = {
     if (error) throw new Error(error.message);
   },
 
+  // scope 'others' revokes every refresh token except this browser's, so the
+  // current session survives. Note Supabase does NOT do this automatically on a
+  // password change — other devices stay signed in until this is called.
+  async signOutOtherDevices() {
+    const { error } = await supabase.auth.signOut({ scope: 'others' });
+    if (error) throw new Error(error.message);
+  },
+
   async logout(redirectUrl) {
     await supabase.auth.signOut();
     if (redirectUrl) window.location.href = '/login';
