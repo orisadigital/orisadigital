@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,  useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-hot-toast";
 import {
@@ -43,38 +44,22 @@ const SOURCE_LABELS = {
 };
 
 export default function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [clientSourceMap, setClientSourceMap] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const projectsQ = useEntityList("Project", "-created_date");
+  const clientsQ = useEntityList("Client", "-created_date");
+
+  const projects = projectsQ.data;
+  const setProjects = projectsQ.setData;
+  const loading = projectsQ.isLoading || clientsQ.isLoading;
+  const loadError = projectsQ.loadError || clientsQ.loadError;
+  const clientSourceMap = useMemo(
+    () => Object.fromEntries(clientsQ.data.map((c) => [c.id, c.inquiry_source])),
+    [clientsQ.data]
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
 
   const oneOffProjects = projects.filter((p) => !p.is_recurring);
   const recurringProjects = projects.filter((p) => p.is_recurring);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [projectData, clientData] = await Promise.all([
-          base44.entities.Project.list("-created_date"),
-          base44.entities.Client.list("-created_date"),
-        ]);
-        setProjects(projectData);
-        setClientSourceMap(
-          Object.fromEntries(
-            clientData.map((c) => [c.id, c.inquiry_source])
-          )
-        );
-      } catch (e) {
-        console.error("Failed to load projects", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
 
   const handleAddClick = () => {
     setEditingProject(null);

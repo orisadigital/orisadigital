@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { base44 } from "@/api/base44Client";
+import React, { useMemo } from "react";
+import { useEntityList } from "@/hooks/useEntityList";
 import {
   BarChart,
   Bar,
@@ -17,35 +17,17 @@ import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 const SOURCE_LABELS = Object.fromEntries(DEAL_SOURCES.map((s) => [s.value, s.label]));
 
 export default function Dashboard() {
-  const [deals, setDeals] = useState([]);
-  const [prospects, setProspects] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const dealsQ = useEntityList("Deal");
+  const prospectsQ = useEntityList("Prospect");
+  const clientsQ = useEntityList("Client");
+  const projectsQ = useEntityList("Project");
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const [d, p, c, pr] = await Promise.all([
-          base44.entities.Deal.list(),
-          base44.entities.Prospect.list(),
-          base44.entities.Client.list(),
-          base44.entities.Project.list(),
-        ]);
-        setDeals(d);
-        setProspects(p);
-        setClients(c);
-        setProjects(pr);
-      } catch (e) {
-        console.error("Failed to load dashboard data", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const deals = dealsQ.data;
+  const prospects = prospectsQ.data;
+  const clients = clientsQ.data;
+  const projects = projectsQ.data;
+  const loading = dealsQ.isLoading || prospectsQ.isLoading || clientsQ.isLoading || projectsQ.isLoading;
+  const loadError = dealsQ.loadError || prospectsQ.loadError || clientsQ.loadError || projectsQ.loadError;
 
   const pipelineValue = useMemo(
     () => deals.reduce((sum, d) => sum + (Number(d.amount) || 0), 0),

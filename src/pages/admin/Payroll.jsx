@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -23,29 +24,9 @@ import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 import PayrollTotalsChart from "@/components/hr/PayrollTotalsChart";
 
 export default function Payroll() {
-  const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const { data: records, setData: setRecords, isLoading: loading, loadError } = useEntityList("Payroll", "-pay_date");
   const [editingRecord, setEditingRecord] = useState(null);
   const [addingRecord, setAddingRecord] = useState(false);
-
-  useEffect(() => {
-    const loadRecords = async () => {
-      try {
-        const data = await base44.entities.Payroll.list("-pay_date");
-        setRecords(data);
-      } catch (e) {
-        // Keep the reason on screen rather than only in the console: an empty
-        // list and an unreadable one look identical otherwise, and writing is
-        // pointless while reading fails.
-        console.error("Failed to load payroll", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadRecords();
-  }, []);
 
   // Only pending records are money still owed; paid and cancelled are settled.
   const pendingTotal = useMemo(

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -31,26 +32,9 @@ const SOURCE_STYLES = {
 };
 
 export default function Client() {
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const { data: clients, setData: setClients, isLoading: loading, loadError } = useEntityList("Client", "-created_date");
   const [editingClient, setEditingClient] = useState(null);
   const [addingClient, setAddingClient] = useState(false);
-
-  useEffect(() => {
-    const loadClients = async () => {
-      try {
-        const data = await base44.entities.Client.list("-created_date");
-        setClients(data);
-      } catch (e) {
-        console.error("Failed to load clients", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadClients();
-  }, []);
 
   const handleDelete = async (clientId) => {
     try {

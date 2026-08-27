@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO, differenceInDays } from "date-fns";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -17,27 +18,9 @@ import { RENEWAL_STATUS_STYLES, CYCLE_LABELS, fmtRM } from "@/components/renewal
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function DomainHosting() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const { data: items, setData: setItems, isLoading: loading, loadError } = useEntityList("DomainHosting", "-renewal_date");
   const [editing, setEditing] = useState(null);
   const [adding, setAdding] = useState(false);
-
-  const load = async () => {
-    try {
-      const data = await base44.entities.DomainHosting.list("-renewal_date");
-      setItems(data);
-    } catch (e) {
-      console.error("Failed to load domains/hosting", e);
-      setLoadError(e?.message || "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
 
   const handleDelete = async (id) => {
     try {

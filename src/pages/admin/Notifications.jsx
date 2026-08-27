@@ -1,39 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,  useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { addDays, format } from "date-fns";
 import { refreshNotificationCount } from "@/hooks/useNotificationCount";
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Notifications() {
-  const [reminders, setReminders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-  const [completingId, setCompletingId] = useState(null);
+  const { data: tasks, setData: setTasks, isLoading: loading, loadError } = useEntityList("Task");
 
-  useEffect(() => {
-    const fetchReminders = async () => {
-      try {
-        const tasks = await base44.entities.Task.list();
-        const tomorrow = addDays(new Date(), 1);
-        const filtered = tasks.filter(
-          (t) => !t.is_completed && new Date(t.date) <= tomorrow
-        );
-        setReminders(filtered);
-      } catch (e) {
-        console.error("Failed to load notifications", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReminders();
-  }, []);
+  const reminders = useMemo(() => {
+    const tomorrow = addDays(new Date(), 1);
+    return tasks.filter((t) => !t.is_completed && new Date(t.date) <= tomorrow);
+  }, [tasks]);
+  const [completingId, setCompletingId] = useState(null);
 
   const handleComplete = async (taskId) => {
     setCompletingId(taskId);
     try {
       await base44.entities.Task.update(taskId, { is_completed: true });
-      setReminders((prev) => prev.filter((t) => t.id !== taskId));
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, is_completed: true } : t)));
       refreshNotificationCount();
     } catch (e) {
       console.error("Failed to complete task", e);
