@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Save, User, Building2, FolderKanban, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,10 +11,9 @@ import {
 } from "@/components/ui/sheet";
 import { DEAL_SOURCES } from "@/components/pipeline/pipelineStages";
 
-function SectionHeader({ icon: Icon, title }) {
+function SectionHeader({ title }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-      <Icon className="h-4 w-4 text-slate-400" />
       <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
     </div>
   );
@@ -75,7 +73,7 @@ export default function ClientEditSheet({ client, onUpdate, onClose }) {
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Primary Contact */}
           <section className="space-y-3">
-            <SectionHeader icon={User} title="Primary Contact" />
+            <SectionHeader  title="Primary Contact" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Full Name" required>
                 <Input value={form.client_name} onChange={set("client_name")} className={inputCls} />
@@ -94,7 +92,7 @@ export default function ClientEditSheet({ client, onUpdate, onClose }) {
 
           {/* Company Information */}
           <section className="space-y-3">
-            <SectionHeader icon={Building2} title="Company Information" />
+            <SectionHeader  title="Company Information" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Company Name">
                 <Input value={form.company_name} onChange={set("company_name")} className={inputCls} />
@@ -131,7 +129,7 @@ export default function ClientEditSheet({ client, onUpdate, onClose }) {
 
           {/* Notes */}
           <section className="space-y-3">
-            <SectionHeader icon={FileText} title="Notes" />
+            <SectionHeader  title="Notes" />
             <textarea
               value={form.notes}
               onChange={set("notes")}
@@ -142,7 +140,7 @@ export default function ClientEditSheet({ client, onUpdate, onClose }) {
 
           {/* Projects */}
           <section className="space-y-3">
-            <SectionHeader icon={FolderKanban} title="Projects" />
+            <SectionHeader  title="Projects" />
             <p className="text-sm text-slate-400 text-center py-6">
               No projects linked to this client yet.
             </p>
@@ -150,7 +148,6 @@ export default function ClientEditSheet({ client, onUpdate, onClose }) {
 
           <SheetFooter className="mt-2">
             <Button type="submit" size="sm" className="bg-slate-900 hover:bg-slate-800">
-              <Save className="h-3.5 w-3.5" />
               Save Changes
             </Button>
           </SheetFooter>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Save, Package, KeyRound, Lock, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,10 +11,9 @@ import {
 } from "@/components/ui/sheet";
 import RenewalDateInput from "@/components/renewals/RenewalDateInput";
 
-function SectionHeader({ icon: Icon, title }) {
+function SectionHeader({ title }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-      <Icon className="h-4 w-4 text-slate-400" />
       <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
     </div>
   );
@@ -75,7 +73,7 @@ export default function SoftwarePluginSheet({ record, open, onSave, onClose }) {
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           <section className="space-y-3">
-            <SectionHeader icon={Package} title="Item Details" />
+            <SectionHeader  title="Item Details" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Name" required>
                 <Input value={form.name} onChange={set("name")} className={inputCls} placeholder="Elementor Pro" />
@@ -127,7 +125,7 @@ export default function SoftwarePluginSheet({ record, open, onSave, onClose }) {
           </section>
 
           <section className="space-y-3">
-            <SectionHeader icon={Lock} title="Credentials" />
+            <SectionHeader  title="Credentials" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Username">
                 <Input value={form.username} onChange={set("username")} className={inputCls} />
@@ -139,7 +137,7 @@ export default function SoftwarePluginSheet({ record, open, onSave, onClose }) {
           </section>
 
           <section className="space-y-3">
-            <SectionHeader icon={KeyRound} title="License" />
+            <SectionHeader  title="License" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="License Key">
                 <Input value={form.license_key} onChange={set("license_key")} className={inputCls} />
@@ -157,7 +155,7 @@ export default function SoftwarePluginSheet({ record, open, onSave, onClose }) {
           </section>
 
           <section className="space-y-3">
-            <SectionHeader icon={FileText} title="Notes" />
+            <SectionHeader  title="Notes" />
             <textarea
               value={form.notes}
               onChange={set("notes")}
@@ -168,7 +166,6 @@ export default function SoftwarePluginSheet({ record, open, onSave, onClose }) {
 
           <SheetFooter className="mt-2">
             <Button type="submit" size="sm" className="bg-slate-900 hover:bg-slate-800">
-              <Save className="h-3.5 w-3.5" />
               {record ? "Save Changes" : "Add"}
             </Button>
           </SheetFooter>

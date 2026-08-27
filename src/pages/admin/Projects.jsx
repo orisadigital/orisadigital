@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { format, parseISO } from "date-fns";
-import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   Table,
@@ -139,7 +138,6 @@ export default function Projects() {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900">Projects</h2>
         <Button size="sm" onClick={handleAddClick} className="bg-slate-900 hover:bg-slate-800" disabled={Boolean(loadError)}>
-          <Plus className="h-4 w-4" />
           Add Project
         </Button>
       </div>
@@ -240,21 +238,17 @@ export default function Projects() {
                   <TableCell className="px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-slate-700"
                         onClick={() => handleEditClick(p)}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
+                      >Edit</Button>
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-destructive"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-destructive"
                         onClick={() => handleDelete(p)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
+                      >Delete</Button>
                     </div>
                   </TableCell>
                 </TableRow>

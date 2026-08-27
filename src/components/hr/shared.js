@@ -10,6 +10,36 @@ export const PAYROLL_STATUSES = [
   { value: "cancelled", label: "Cancelled" },
 ];
 
+export const EMPLOYEE_NAMES = [
+  "Faruqi Jeniri",
+  "Amirul Zambri",
+  "Awang Syaizatul",
+];
+
+// Sentinel for the "Others" option on the name and position pickers. Never
+// stored — picking it just reveals a free-text box, and what gets saved is
+// whatever is typed there.
+export const OTHER_OPTION = "__other__";
+
+export const POSITIONS = [
+  "Web Designer",
+  "Graphic Designer",
+  "Photographer",
+  "Videographer",
+  "Sales",
+];
+
+// Payment types that ask for one extra detail each.
+export const PROJECT_FEE = "Project Fee";
+export const COMMISSION = "Commission";
+
+export const PAYMENT_TYPES = [
+  "Salary",
+  "Project Fee",
+  "Commission",
+  "Bonus",
+];
+
 export const PAYMENT_METHODS = [
   { value: "bank_transfer", label: "Bank Transfer" },
   { value: "cash", label: "Cash" },
@@ -20,18 +50,3 @@ export const PAYMENT_METHODS = [
 export const PAYMENT_METHOD_LABELS = Object.fromEntries(
   PAYMENT_METHODS.map((m) => [m.value, m.label])
 );
-
-// Net pay is derived, never stored — see migration 004.
-export const netPay = ({ basic_salary, allowances, deductions }) =>
-  (Number(basic_salary) || 0) + (Number(allowances) || 0) - (Number(deductions) || 0);
-
-// pay_period is stored as "YYYY-MM" (text, like every other date in the schema).
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-export function formatPayPeriod(period) {
-  if (!period) return "—";
-  const [year, month] = String(period).split("-");
-  const idx = Number(month) - 1;
-  if (!year || !MONTHS[idx]) return period;
-  return `${MONTHS[idx]} ${year}`;
-}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Boxes, Trash2, Pencil, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -86,13 +85,11 @@ export default function Subscription() {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Boxes className="h-5 w-5 text-slate-400" />
           <span className="text-sm text-slate-500">
             {items.length} subscription{items.length !== 1 ? "s" : ""}
           </span>
         </div>
         <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAdding(true)} disabled={Boolean(loadError)}>
-          <Plus className="h-3.5 w-3.5" />
           Add Subscription
         </Button>
       </div>
@@ -147,12 +144,8 @@ export default function Subscription() {
                     </TableCell>
                     <TableCell className="px-4 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-slate-700" onClick={() => setEditing(i)}>
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-destructive" onClick={() => handleDelete(i.id)}>
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                        <Button size="sm" variant="ghost" className="text-xs h-7 px-2 text-slate-400 hover:text-slate-700" onClick={() => setEditing(i)}>Edit</Button>
+                        <Button size="sm" variant="ghost" className="text-xs h-7 px-2 text-slate-400 hover:text-destructive" onClick={() => handleDelete(i.id)}>Delete</Button>
                       </div>
                     </TableCell>
                   </TableRow>

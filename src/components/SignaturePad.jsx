@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
 
 const SignaturePad = forwardRef((props, ref) => {
   const canvasRef = useRef(null);
@@ -22,7 +21,7 @@ const SignaturePad = forwardRef((props, ref) => {
       ctx.lineJoin = "round";
       ctx.lineCap = "round";
       ctx.lineWidth = 2;
-      ctx.strokeStyle = "#0f172a";
+      ctx.strokeStyle = "#000000";
       if (data && hasSignature) {
         const img = new Image();
         img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
@@ -107,7 +106,6 @@ const SignaturePad = forwardRef((props, ref) => {
         onClick={clear}
         className="mt-2 text-slate-600"
       >
-        <Trash2 className="h-3.5 w-3.5 mr-1.5" />
         Clear
       </Button>
     </div>

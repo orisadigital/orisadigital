@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
-import { Save, FolderKanban, Globe, Server, Layout, KeyRound, Plus, X, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -52,10 +51,9 @@ const EMPTY_FORM = {
   status: "active",
 };
 
-function SectionHeader({ icon: Icon, title }) {
+function SectionHeader({ title }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-      <Icon className="h-4 w-4 text-slate-400" />
       <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
     </div>
   );
@@ -135,7 +133,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
             {/* Details Tab */}
             <TabsContent value="details" className="space-y-6 mt-4">
               <section className="space-y-3">
-                <SectionHeader icon={FolderKanban} title="Project Info" />
+                <SectionHeader  title="Project Info" />
                 <Field label="Project Name" required>
                   <Input value={form.project_name} onChange={set("project_name")} className={inputCls} placeholder="Website Redesign" />
                 </Field>
@@ -198,7 +196,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* Recurring Sale */}
               <section className="space-y-3">
-                <SectionHeader icon={RefreshCw} title="Recurring Sale" />
+                <SectionHeader  title="Recurring Sale" />
                 <div className="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2.5">
                   <div>
                     <p className="text-sm font-medium text-slate-900">Enable recurring sale</p>
@@ -244,7 +242,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* Domain Names */}
               <section className="space-y-3">
-                <SectionHeader icon={Globe} title="Domain Names" />
+                <SectionHeader  title="Domain Names" />
                 <div className="space-y-2">
                   {(form.domain_names || []).map((name, idx) => (
                     <div key={idx} className="flex items-center gap-2">
@@ -260,16 +258,14 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
                       />
                       <Button
                         type="button"
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-destructive shrink-0"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-destructive shrink-0"
                         onClick={() => setForm((prev) => ({
                           ...prev,
                           domain_names: (prev.domain_names || []).filter((_, i) => i !== idx),
                         }))}
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </Button>
+                      >Remove</Button>
                     </div>
                   ))}
                   <Button
@@ -282,7 +278,6 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
                       domain_names: [...(prev.domain_names || []), ""],
                     }))}
                   >
-                    <Plus className="h-3.5 w-3.5" />
                     Add Domain
                   </Button>
                 </div>
@@ -293,7 +288,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
             <TabsContent value="credentials" className="space-y-6 mt-4">
               {/* Webmaster */}
               <section className="space-y-3">
-                <SectionHeader icon={KeyRound} title="Webmaster" />
+                <SectionHeader  title="Webmaster" />
                 <Field label="Email">
                   <Input type="email" value={form.webmaster_email} onChange={set("webmaster_email")} className={inputCls} />
                 </Field>
@@ -309,7 +304,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* Domain */}
               <section className="space-y-3">
-                <SectionHeader icon={Globe} title="Domain" />
+                <SectionHeader  title="Domain" />
                 <Field label="Domain">
                   <select
                     value={form.domain_name}
@@ -345,7 +340,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* Hosting */}
               <section className="space-y-3">
-                <SectionHeader icon={Server} title="Hosting" />
+                <SectionHeader  title="Hosting" />
                 <Field label="Hosting Provider">
                   <select
                     value={form.hosting_name}
@@ -381,7 +376,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* cPanel */}
               <section className="space-y-3">
-                <SectionHeader icon={Server} title="cPanel" />
+                <SectionHeader  title="cPanel" />
                 <div className="grid grid-cols-2 gap-3">
                   <Field label="Username">
                     <Input value={form.cpanel_username} onChange={set("cpanel_username")} className={inputCls} />
@@ -394,7 +389,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* WordPress */}
               <section className="space-y-3">
-                <SectionHeader icon={Layout} title="WordPress" />
+                <SectionHeader  title="WordPress" />
                 <div className="grid grid-cols-2 gap-3">
                   <Field label="Admin 1 Username">
                     <Input value={form.wp_admin1_username} onChange={set("wp_admin1_username")} className={inputCls} />
@@ -419,7 +414,7 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
               {/* Expiry Dates */}
               <section className="space-y-3">
-                <SectionHeader icon={KeyRound} title="Expiry Dates" />
+                <SectionHeader  title="Expiry Dates" />
                 <div className="grid grid-cols-2 gap-3">
                   <Field label="Domain Expiry Date">
                     <select
@@ -461,7 +456,6 @@ export default function ProjectAddSheet({ project, onSave, onClose }) {
 
           <SheetFooter className="mt-4">
             <Button type="submit" size="sm" className="bg-slate-900 hover:bg-slate-800">
-              <Save className="h-3.5 w-3.5" />
               {project ? "Save Changes" : "Add Project"}
             </Button>
           </SheetFooter>

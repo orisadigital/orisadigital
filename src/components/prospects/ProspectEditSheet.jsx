@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Save, User, Building2, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,10 +11,9 @@ import {
 } from "@/components/ui/sheet";
 import { DEAL_SOURCES } from "@/components/pipeline/pipelineStages";
 
-function SectionHeader({ icon: Icon, title }) {
+function SectionHeader({ title }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-      <Icon className="h-4 w-4 text-slate-400" />
       <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
     </div>
   );
@@ -71,7 +69,7 @@ export default function ProspectEditSheet({ prospect, onUpdate, onClose }) {
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Contact */}
           <section className="space-y-3">
-            <SectionHeader icon={User} title="Contact Details" />
+            <SectionHeader  title="Contact Details" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Prospect Name" required>
                 <Input value={form.prospect_name} onChange={set("prospect_name")} className={inputCls} placeholder="John Doe" />
@@ -89,7 +87,7 @@ export default function ProspectEditSheet({ prospect, onUpdate, onClose }) {
 
           {/* Company */}
           <section className="space-y-3">
-            <SectionHeader icon={Building2} title="Company & Source" />
+            <SectionHeader  title="Company & Source" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Company Name">
                 <Input value={form.company_name} onChange={set("company_name")} className={inputCls} placeholder="Acme Inc." />
@@ -125,7 +123,7 @@ export default function ProspectEditSheet({ prospect, onUpdate, onClose }) {
 
           {/* Notes */}
           <section className="space-y-3">
-            <SectionHeader icon={FileText} title="Notes" />
+            <SectionHeader  title="Notes" />
             <textarea
               value={form.notes}
               onChange={set("notes")}
@@ -136,7 +134,6 @@ export default function ProspectEditSheet({ prospect, onUpdate, onClose }) {
 
           <SheetFooter className="mt-2">
             <Button type="submit" size="sm" className="bg-slate-900 hover:bg-slate-800">
-              <Save className="h-3.5 w-3.5" />
               Save Changes
             </Button>
           </SheetFooter>

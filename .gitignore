@@ -38,3 +38,6 @@ migration-data/
 
 # Wrangler (Cloudflare) local state
 .wrangler/
+
+# Supabase CLI local cache
+supabase/.temp/

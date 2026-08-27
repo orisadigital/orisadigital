@@ -1,14 +1,5 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  LayoutGrid,
-  Newspaper,
-  Layers,
-  Languages,
-  Megaphone,
-  Send,
-  CreditCard,
-} from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -16,13 +7,13 @@ import AddOnSliderPanel from "@/components/calculator/AddOnSliderPanel";
 import LanguagePanel from "@/components/calculator/LanguagePanel";
 
 const ADDONS = [
-  { id: "contentBlocks", title: "Content Blocks", desc: "Extra content sections", Icon: LayoutGrid, panelType: "slider", unitPrice: 40, sliderLabel: "Content blocks", sliderMax: 5 },
-  { id: "blog", title: "Blog Section", desc: "Full blog/news publishing workflow", price: 200, Icon: Newspaper },
-  { id: "customPostType", title: "Custom Post Type", desc: "Custom content types & templates", Icon: Layers, panelType: "slider", unitPrice: 150, sliderLabel: "Custom post types", sliderMax: 10 },
-  { id: "multiLanguage", title: "Multi Language", desc: "Multi language support", Icon: Languages, panelType: "language" },
-  { id: "popUpCall", title: "Pop Up Call", desc: "Call to action pop ups", Icon: Megaphone, panelType: "slider", unitPrice: 10, sliderLabel: "Pop-up calls", sliderMax: 10 },
-  { id: "emailSubscription", title: "Email Subscription System", desc: "Newsletter & email list management", price: 120, Icon: Send, badge: "250 subscribers" },
-  { id: "paymentGateway", title: "Payment Gateway", desc: "Online payment integration", price: 250, Icon: CreditCard },
+  { id: "contentBlocks", title: "Content Blocks", desc: "Extra content sections", panelType: "slider", unitPrice: 40, sliderLabel: "Content blocks", sliderMax: 5 },
+  { id: "blog", title: "Blog Section", desc: "Full blog/news publishing workflow", price: 200 },
+  { id: "customPostType", title: "Custom Post Type", desc: "Custom content types & templates", panelType: "slider", unitPrice: 150, sliderLabel: "Custom post types", sliderMax: 10 },
+  { id: "multiLanguage", title: "Multi Language", desc: "Multi language support", panelType: "language" },
+  { id: "popUpCall", title: "Pop Up Call", desc: "Call to action pop ups", panelType: "slider", unitPrice: 10, sliderLabel: "Pop-up calls", sliderMax: 10 },
+  { id: "emailSubscription", title: "Email Subscription System", desc: "Newsletter & email list management", price: 120, badge: "250 subscribers" },
+  { id: "paymentGateway", title: "Payment Gateway", desc: "Online payment integration", price: 250 },
 ];
 
 const OPTION_KEYS = {
@@ -65,7 +56,7 @@ export default function OnePageAddOnsSection({ addOns = {}, onChange, options, s
       <p className="mt-1 text-sm text-slate-500">Enhance your website with additional features.</p>
       <div className="mt-5 space-y-3">
         {ADDONS.map((addon) => {
-          const { id, title, desc, price, Icon, panelType, badge } = addon;
+          const { id, title, desc, price, panelType, badge } = addon;
           const checked = !!addOns[id];
           return (
             <div
@@ -80,9 +71,6 @@ export default function OnePageAddOnsSection({ addOns = {}, onChange, options, s
                   checked={checked}
                   onCheckedChange={(val) => onChange({ ...addOns, [id]: val })}
                 />
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-                  <Icon className="h-5 w-5" />
-                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-sm font-medium text-slate-900">{title}</p>

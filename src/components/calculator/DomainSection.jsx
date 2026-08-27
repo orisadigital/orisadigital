@@ -1,7 +1,6 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
 
 export const DOMAIN_EXTENSIONS = [
   { id: "com", label: ".com", desc: "Global standard domain", price: 55.9 },
@@ -41,11 +40,6 @@ export default function DomainSection({ domain, onChange, sectionNumber = "05" }
                   selected ? "border-slate-900 bg-slate-50" : "border-slate-200 bg-white hover:border-slate-300"
                 )}
               >
-                {selected && (
-                  <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-900 text-white">
-                    <Check className="h-3 w-3" />
-                  </span>
-                )}
                 <p className="font-semibold text-slate-900">{ext.label}</p>
                 <p className="text-xs text-slate-500">{ext.desc}</p>
                 <p className="mt-1 text-sm font-semibold text-slate-900">RM{ext.price.toFixed(2)}/yr</p>

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PIPELINE_STAGES, STAGE_COLORS, DEAL_SOURCES } from "@/components/pipeline/pipelineStages";
-import { Check } from "lucide-react";
+import { PIPELINE_STAGES, DEAL_SOURCES } from "@/components/pipeline/pipelineStages";
 
 export default function DealEditForm({ deal, onSave, onCancel }) {
   const [form, setForm] = useState({
@@ -31,7 +30,6 @@ export default function DealEditForm({ deal, onSave, onCancel }) {
     <form
       onSubmit={handleSubmit}
       className="rounded-lg border bg-white p-3 shadow-sm space-y-2.5"
-      style={{ borderLeftColor: STAGE_COLORS[form.stage] || "#cbd5e1", borderLeftWidth: 3 }}
       onMouseDown={(e) => e.stopPropagation()}
     >
       <Input value={form.deal_name} onChange={(e) => update("deal_name", e.target.value)} placeholder="Deal Name" className="h-8 text-sm" />
@@ -62,7 +60,7 @@ export default function DealEditForm({ deal, onSave, onCancel }) {
       </Select>
       <div className="flex gap-2 pt-1">
         <Button type="submit" size="sm" className="flex-1 h-8 bg-slate-900 hover:bg-slate-800">
-          <Check className="h-3.5 w-3.5 mr-1" />Save
+          Save
         </Button>
         <Button type="button" size="sm" variant="outline" className="h-8" onClick={onCancel}>Cancel</Button>
       </div>

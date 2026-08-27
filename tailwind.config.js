@@ -1,15 +1,32 @@
+const colors = require('tailwindcss/colors');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+  		boxShadow: {
+  			DEFAULT: '0 0 #0000',
+  			sm: '0 0 #0000',
+  			md: '0 0 #0000',
+  			lg: '0 0 #0000',
+  			xl: '0 0 #0000',
+  			'2xl': '0 0 #0000',
+  			inner: '0 0 #0000'
+  		},
   		borderRadius: {
+  			DEFAULT: 'var(--radius)',
+  			sm: 'calc(var(--radius) * 0.5)',
+  			md: 'calc(var(--radius) * 0.75)',
   			lg: 'var(--radius)',
-  			md: 'calc(var(--radius) - 2px)',
-  			sm: 'calc(var(--radius) - 4px)'
+  			xl: 'calc(var(--radius) * 1.5)',
+  			'2xl': 'calc(var(--radius) * 2)',
+  			'3xl': 'calc(var(--radius) * 3)'
   		},
   		colors: {
+  			white: '#FAFAFA',
+  			slate: { ...colors.slate, 50: '#FAFAFA', 800: '#262626', 900: '#000000' },
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
@@ -62,6 +79,7 @@ module.exports = {
   			}
   		},
   		fontFamily: {
+  			sans: ['var(--font-body)'],
   			heading: ['var(--font-heading)'],
   			body: ['var(--font-body)'],
   			display: ['var(--font-display)'],

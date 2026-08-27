@@ -10,7 +10,6 @@ const TABLES = {
   Project: 'projects',
   DomainHosting: 'domain_hosting',
   FollowUp: 'follow_ups',
-  KnowledgeBase: 'knowledge_base',
   Payroll: 'payroll',
   SoftwarePlugin: 'software_plugins',
   Subscription: 'subscriptions',
@@ -132,6 +131,23 @@ const auth = {
     if (error) throw new Error(error.message);
   },
 
+  // Signed-in password change. Supabase's updateUser does NOT ask for the old
+  // password, so re-authenticate first: without that, anyone with access to an
+  // open session could set a new password without knowing the current one.
+  async changePassword({ currentPassword, newPassword }) {
+    const { data, error: userError } = await supabase.auth.getUser();
+    if (userError || !data?.user?.email) throw new Error('Not authenticated');
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: data.user.email,
+      password: currentPassword,
+    });
+    if (signInError) throw new Error('Current password is incorrect');
+
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw new Error(error.message);
+  },
+
   async logout(redirectUrl) {
     await supabase.auth.signOut();
     if (redirectUrl) window.location.href = '/login';
@@ -160,34 +176,4 @@ const integrations = {
   },
 };
 
-// Local stub for the former Base44 sales-assistant agent: the chat UI stays
-// functional and explains that the AI backend isn't connected yet.
-const agents = (() => {
-  const listeners = new Map();
-  return {
-    async createConversation() {
-      return { id: 'local', messages: [] };
-    },
-    subscribeToConversation(id, cb) {
-      listeners.set(id, cb);
-      return () => listeners.delete(id);
-    },
-    async addMessage(conversation, message) {
-      const messages = [
-        ...(conversation.messages || []),
-        message,
-        {
-          role: 'assistant',
-          content:
-            'The AI sales assistant is not connected yet after the move off Base44. ' +
-            'It will come back once an AI backend (e.g. a Supabase Edge Function with the Claude API) is configured.',
-        },
-      ];
-      conversation.messages = messages;
-      listeners.get(conversation.id)?.({ messages });
-      return { messages };
-    },
-  };
-})();
-
-export const base44 = { entities, auth, integrations, agents };
+export const base44 = { entities, auth, integrations };

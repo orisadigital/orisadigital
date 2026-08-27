@@ -1,14 +1,10 @@
 import React from "react";
-import { CheckCircle, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function SuccessMessage({ pdfUrl }) {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-6 py-16">
       <div className="max-w-lg text-center">
-        <div className="flex justify-center mb-6">
-          <CheckCircle className="h-16 w-16 text-green-500" />
-        </div>
         <h1 className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight font-display">
           Thank You!
         </h1>
@@ -24,7 +20,6 @@ export default function SuccessMessage({ pdfUrl }) {
           </p>
           <Button asChild className="text-base py-6">
             <a href={pdfUrl} target="_blank" rel="noopener noreferrer">
-              <Download className="h-4 w-4 mr-2" />
               Download Your Brief
             </a>
           </Button>

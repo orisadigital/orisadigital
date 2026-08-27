@@ -1,6 +1,5 @@
 import React from "react";
 import { format, parseISO } from "date-fns";
-import { Pencil, Trash2 } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -138,21 +137,17 @@ export default function RecurringProjectsTable({
                 <TableCell className="px-4 text-right">
                   <div className="flex items-center justify-end gap-1">
                     <Button
-                      size="icon"
+                      size="sm"
                       variant="ghost"
-                      className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                      className="text-xs h-7 px-2 text-slate-400 hover:text-slate-700"
                       onClick={() => onEdit(p)}
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
+                    >Edit</Button>
                     <Button
-                      size="icon"
+                      size="sm"
                       variant="ghost"
-                      className="h-7 w-7 text-slate-400 hover:text-destructive"
+                      className="text-xs h-7 px-2 text-slate-400 hover:text-destructive"
                       onClick={() => onDelete(p)}
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                    >Delete</Button>
                   </div>
                 </TableCell>
               </TableRow>

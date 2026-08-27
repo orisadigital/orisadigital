@@ -10,9 +10,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
-import { Filter, Users, UserPlus, FolderKanban, TrendingUp, Phone } from "lucide-react";
 import StatCard from "@/components/dashboard/StatCard";
-import SalesAssistantChat from "@/components/dashboard/SalesAssistantChat";
 import { PIPELINE_STAGES, STAGE_COLORS, DEAL_SOURCES } from "@/components/pipeline/pipelineStages";
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
@@ -108,35 +106,33 @@ export default function Dashboard() {
     <div className="space-y-6">
       <LoadErrorBanner label="dashboard data" error={loadError} />
 
-      <SalesAssistantChat />
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Total Pipeline Value"
           value={fmtRM(pipelineValue)}
           sub={`${deals.length} deals`}
-          icon={Filter}
+          
           accent="blue"
         />
         <StatCard
           label="Closed Won"
           value={fmtRM(wonValue)}
           sub={`${wonDeals.length} deals won`}
-          icon={TrendingUp}
+          
           accent="emerald"
         />
         <StatCard
           label="Prospects"
           value={deals.length}
           sub="Leads in pipeline"
-          icon={Users}
+          
           accent="violet"
         />
         <StatCard
           label="Clients"
           value={clients.length}
           sub="Converted accounts"
-          icon={UserPlus}
+          
           accent="amber"
         />
       </div>
@@ -146,21 +142,21 @@ export default function Dashboard() {
           label="Projects Total Sales"
           value={fmtRM(projectsSales)}
           sub={`${projects.length} projects`}
-          icon={FolderKanban}
+          
           accent="slate"
         />
         <StatCard
           label="Recurring (Annualised)"
           value={fmtRM(annualRecurring)}
           sub={`${projects.filter((p) => p.is_recurring).length} recurring projects`}
-          icon={TrendingUp}
+          
           accent="emerald"
         />
         <StatCard
           label="Active Projects"
           value={projects.filter((p) => p.status === "active").length}
           sub={`${projects.filter((p) => p.status === "completed").length} completed`}
-          icon={FolderKanban}
+          
           accent="fuchsia"
         />
       </div>
@@ -168,7 +164,6 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="rounded-lg border border-slate-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Filter className="h-4 w-4 text-slate-500" />
             <p className="text-sm font-medium text-slate-600">Deals by Pipeline Stage</p>
           </div>
           {stageData.length === 0 ? (
@@ -191,9 +186,9 @@ export default function Dashboard() {
                   <YAxis tick={{ fontSize: 11, fill: "#64748b" }} allowDecimals={false} />
                   <Tooltip
                     formatter={(value) => [`${value} ${value === 1 ? "deal" : "deals"}`, "Count"]}
-                    contentStyle={{ borderRadius: "8px", border: "1px solid #e2e8f0", fontSize: "12px" }}
+                    contentStyle={{ borderRadius: "0px", border: "1px solid #e2e8f0", fontSize: "12px" }}
                   />
-                  <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                  <Bar dataKey="count" radius={0}>
                     {stageData.map((entry) => (
                       <Cell key={entry.key} fill={entry.color} />
                     ))}
@@ -206,7 +201,6 @@ export default function Dashboard() {
 
         <div className="rounded-lg border border-slate-200 bg-white p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Phone className="h-4 w-4 text-slate-500" />
             <p className="text-sm font-medium text-slate-600">Recent Deals</p>
           </div>
           {recentDeals.length === 0 ? (
