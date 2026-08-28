@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import AddDealForm from "@/components/pipeline/AddDealForm";
 import DealsThisQuarter from "@/components/pipeline/DealsThisQuarter";
 import StageDistribution from "@/components/pipeline/StageDistribution";
@@ -7,24 +8,7 @@ import KanbanBoard from "@/components/pipeline/KanbanBoard";
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Pipeline() {
-  const [deals, setDeals] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-
-  useEffect(() => {
-    const loadDeals = async () => {
-      try {
-        const data = await base44.entities.Deal.list();
-        setDeals(data);
-      } catch (e) {
-        console.error("Failed to load deals", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadDeals();
-  }, []);
+  const { data: deals, setData: setDeals, isLoading: loading, loadError } = useEntityList("Deal");
 
   const handleAddDeal = async (deal) => {
     const created = await base44.entities.Deal.create(deal);

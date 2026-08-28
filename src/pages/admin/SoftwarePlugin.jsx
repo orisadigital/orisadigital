@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { Package, Trash2, Pencil, Plus } from "lucide-react";
+import { useEntityList } from "@/hooks/useEntityList";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,27 +17,9 @@ import { RENEWAL_STATUS_STYLES, CYCLE_LABELS, fmtRM, formatRenewalDate, daysUnti
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function SoftwarePlugin() {
-  const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const { data: items, setData: setItems, isLoading: loading, loadError } = useEntityList("SoftwarePlugin", "-renewal_date");
   const [editing, setEditing] = useState(null);
   const [adding, setAdding] = useState(false);
-
-  const load = async () => {
-    try {
-      const data = await base44.entities.SoftwarePlugin.list("-renewal_date");
-      setItems(data);
-    } catch (e) {
-      console.error("Failed to load software/plugins", e);
-      setLoadError(e?.message || "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    load();
-  }, []);
 
   const handleDelete = async (id) => {
     try {
@@ -86,13 +68,11 @@ export default function SoftwarePlugin() {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Package className="h-5 w-5 text-slate-400" />
           <span className="text-sm text-slate-500">
             {items.length} item{items.length !== 1 ? "s" : ""}
           </span>
         </div>
         <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAdding(true)} disabled={Boolean(loadError)}>
-          <Plus className="h-3.5 w-3.5" />
           Add Software / Plugin
         </Button>
       </div>
@@ -147,12 +127,8 @@ export default function SoftwarePlugin() {
                     </TableCell>
                     <TableCell className="px-4 text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-slate-700" onClick={() => setEditing(i)}>
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button size="icon" variant="ghost" className="h-7 w-7 text-slate-400 hover:text-destructive" onClick={() => handleDelete(i.id)}>
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
+                        <Button size="sm" variant="ghost" className="text-xs h-7 px-2 text-slate-400 hover:text-slate-700" onClick={() => setEditing(i)}>Edit</Button>
+                        <Button size="sm" variant="ghost" className="text-xs h-7 px-2 text-slate-400 hover:text-destructive" onClick={() => handleDelete(i.id)}>Delete</Button>
                       </div>
                     </TableCell>
                   </TableRow>

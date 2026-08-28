@@ -1,40 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,  useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { addDays, format } from "date-fns";
-import { CheckCircle2, CalendarClock } from "lucide-react";
 import { refreshNotificationCount } from "@/hooks/useNotificationCount";
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Notifications() {
-  const [reminders, setReminders] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-  const [completingId, setCompletingId] = useState(null);
+  const { data: tasks, setData: setTasks, isLoading: loading, loadError } = useEntityList("Task");
 
-  useEffect(() => {
-    const fetchReminders = async () => {
-      try {
-        const tasks = await base44.entities.Task.list();
-        const tomorrow = addDays(new Date(), 1);
-        const filtered = tasks.filter(
-          (t) => !t.is_completed && new Date(t.date) <= tomorrow
-        );
-        setReminders(filtered);
-      } catch (e) {
-        console.error("Failed to load notifications", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReminders();
-  }, []);
+  const reminders = useMemo(() => {
+    const tomorrow = addDays(new Date(), 1);
+    return tasks.filter((t) => !t.is_completed && new Date(t.date) <= tomorrow);
+  }, [tasks]);
+  const [completingId, setCompletingId] = useState(null);
 
   const handleComplete = async (taskId) => {
     setCompletingId(taskId);
     try {
       await base44.entities.Task.update(taskId, { is_completed: true });
-      setReminders((prev) => prev.filter((t) => t.id !== taskId));
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, is_completed: true } : t)));
       refreshNotificationCount();
     } catch (e) {
       console.error("Failed to complete task", e);
@@ -58,7 +42,6 @@ export default function Notifications() {
         </div>
       ) : reminders.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <CheckCircle2 className="w-12 h-12 text-slate-300 mb-4" />
           <p className="text-lg font-medium text-slate-900">All caught up!</p>
           <p className="text-sm text-slate-500 mt-1">
             No tasks due tomorrow.
@@ -72,7 +55,6 @@ export default function Notifications() {
               className="flex items-center justify-between gap-4 p-4 bg-amber-50 border border-amber-200 rounded-lg"
             >
               <div className="flex items-center gap-3">
-                <CalendarClock className="w-5 h-5 text-amber-500 shrink-0" />
                 <div>
                   <p className="font-medium text-slate-900">{task.task_title}</p>
                   <p className="text-xs text-slate-500">
@@ -85,7 +67,6 @@ export default function Notifications() {
                 disabled={completingId === task.id}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-emerald-700 bg-emerald-100 rounded-md hover:bg-emerald-200 transition-colors disabled:opacity-50"
               >
-                <CheckCircle2 className="w-4 h-4" />
                 Mark done
               </button>
             </div>

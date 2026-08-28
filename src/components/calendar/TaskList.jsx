@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Pencil, Trash2, X, Plus } from "lucide-react";
 import { format, parseISO } from "date-fns";
 
 const todayStr = () => new Date().toISOString().split("T")[0];
@@ -40,7 +39,6 @@ export default function TaskList({ tasks, onComplete, onUpdate, onDelete, onAddT
           onClick={() => setShowForm(!showForm)}
           className="flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700"
         >
-          <Plus className="h-3.5 w-3.5" />
           Add
         </button>
       </div>
@@ -92,12 +90,8 @@ export default function TaskList({ tasks, onComplete, onUpdate, onDelete, onAddT
                     onChange={(e) => setEditForm({ ...editForm, date: e.target.value })}
                     className="h-7 text-sm flex-1"
                   />
-                  <Button size="sm" className="bg-slate-900 hover:bg-slate-800 h-7 px-2" onClick={() => saveEdit(task.id)}>
-                    <Check className="h-3 w-3" />
-                  </Button>
-                  <Button size="sm" variant="outline" className="h-7 px-2" onClick={() => setEditingId(null)}>
-                    <X className="h-3 w-3" />
-                  </Button>
+                  <Button size="sm" className="text-xs bg-slate-900 hover:bg-slate-800 h-7 px-2" onClick={() => saveEdit(task.id)}>Save</Button>
+                  <Button size="sm" variant="outline" className="text-xs h-7 px-2" onClick={() => setEditingId(null)}>Cancel</Button>
                 </div>
               </div>
             ) : (
@@ -115,16 +109,12 @@ export default function TaskList({ tasks, onComplete, onUpdate, onDelete, onAddT
                 <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     onClick={() => startEdit(task)}
-                    className="p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700"
-                  >
-                    <Pencil className="h-3 w-3" />
-                  </button>
+                    className="text-xs p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700"
+                  >Edit</button>
                   <button
                     onClick={() => onDelete(task.id)}
-                    className="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </button>
+                    className="text-xs p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
+                  >Delete</button>
                 </div>
               </div>
             )}

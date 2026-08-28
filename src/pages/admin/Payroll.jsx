@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
-import { Banknote, Trash2, Pencil, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,41 +17,20 @@ import { fmtRM } from "@/components/renewals/shared";
 import {
   PAYROLL_STATUS_STYLES,
   PAYMENT_METHOD_LABELS,
-  netPay,
-  formatPayPeriod,
 } from "@/components/hr/shared";
 import PayrollEditSheet from "@/components/hr/PayrollEditSheet";
 import PayrollAddSheet from "@/components/hr/PayrollAddSheet";
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
+import PayrollTotalsChart from "@/components/hr/PayrollTotalsChart";
 
 export default function Payroll() {
-  const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const { data: records, setData: setRecords, isLoading: loading, loadError } = useEntityList("Payroll", "-pay_date");
   const [editingRecord, setEditingRecord] = useState(null);
   const [addingRecord, setAddingRecord] = useState(false);
 
-  useEffect(() => {
-    const loadRecords = async () => {
-      try {
-        const data = await base44.entities.Payroll.list("-pay_period");
-        setRecords(data);
-      } catch (e) {
-        // Keep the reason on screen rather than only in the console: an empty
-        // list and an unreadable one look identical otherwise, and writing is
-        // pointless while reading fails.
-        console.error("Failed to load payroll", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadRecords();
-  }, []);
-
   // Only pending records are money still owed; paid and cancelled are settled.
   const pendingTotal = useMemo(
-    () => records.filter((r) => r.status === "pending").reduce((sum, r) => sum + netPay(r), 0),
+    () => records.filter((r) => r.status === "pending").reduce((sum, r) => sum + (Number(r.basic_salary) || 0), 0),
     [records]
   );
 
@@ -108,9 +87,10 @@ export default function Payroll() {
     <div className="space-y-4">
       <LoadErrorBanner label="payroll records" error={loadError} />
 
+      {!loadError && <PayrollTotalsChart records={records} />}
+
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Banknote className="h-5 w-5 text-slate-400" />
           <span className="text-sm text-slate-500">
             {loadError ? (
               "Unavailable"
@@ -131,7 +111,6 @@ export default function Payroll() {
           disabled={Boolean(loadError)}
           title={loadError ? "Payroll records could not be loaded" : undefined}
         >
-          <Plus className="h-3.5 w-3.5" />
           Add Record
         </Button>
       </div>
@@ -142,10 +121,9 @@ export default function Payroll() {
             <TableRow className="bg-slate-50 hover:bg-slate-50">
               <TableHead className="px-4 font-semibold text-slate-600">Employee</TableHead>
               <TableHead className="px-4 font-semibold text-slate-600">Position</TableHead>
-              <TableHead className="px-4 font-semibold text-slate-600">Pay Period</TableHead>
+              <TableHead className="px-4 font-semibold text-slate-600">Type</TableHead>
               <TableHead className="px-4 font-semibold text-slate-600">Pay Date</TableHead>
-              <TableHead className="px-4 font-semibold text-slate-600">Basic</TableHead>
-              <TableHead className="px-4 font-semibold text-slate-600">Net Pay</TableHead>
+              <TableHead className="px-4 font-semibold text-slate-600">Amount</TableHead>
               <TableHead className="px-4 font-semibold text-slate-600">Method</TableHead>
               <TableHead className="px-4 font-semibold text-slate-600">Status</TableHead>
               <TableHead className="px-4 font-semibold text-slate-600 text-right">Action</TableHead>
@@ -154,13 +132,13 @@ export default function Payroll() {
           <TableBody>
             {loadError ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-12 text-slate-400">
+                <TableCell colSpan={8} className="text-center py-12 text-slate-400">
                   No records to show.
                 </TableCell>
               </TableRow>
             ) : records.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center py-12 text-slate-400">
+                <TableCell colSpan={8} className="text-center py-12 text-slate-400">
                   No payroll records yet. Add one to get started.
                 </TableCell>
               </TableRow>
@@ -168,26 +146,21 @@ export default function Payroll() {
               records.map((r) => (
                 <TableRow key={r.id} className="hover:bg-slate-50/50">
                   <TableCell className="px-4 font-medium text-slate-900">
-                    <div>
-                      <p>{r.employee_name}</p>
-                      {r.employee_email && (
-                        <p className="text-xs font-normal text-slate-400">{r.employee_email}</p>
-                      )}
-                    </div>
+                    {r.employee_name}
                   </TableCell>
                   <TableCell className="px-4 text-slate-700">
                     {r.employee_position || "—"}
                   </TableCell>
                   <TableCell className="px-4 text-slate-700">
-                    {formatPayPeriod(r.pay_period)}
+                    {r.payment_type || "—"}
+                    {(r.project || r.commission) && (
+                      <p className="text-xs text-slate-400">{r.project || r.commission}</p>
+                    )}
                   </TableCell>
                   <TableCell className="px-4 text-slate-500 text-sm">
                     {r.pay_date ? format(parseISO(r.pay_date), "MMM d, yyyy") : "—"}
                   </TableCell>
-                  <TableCell className="px-4 text-slate-700">{fmtRM(r.basic_salary)}</TableCell>
-                  <TableCell className="px-4 font-medium text-slate-900">
-                    {fmtRM(netPay(r))}
-                  </TableCell>
+                  <TableCell className="px-4 font-medium text-slate-900">{fmtRM(r.basic_salary)}</TableCell>
                   <TableCell className="px-4 text-slate-500 text-sm">
                     {PAYMENT_METHOD_LABELS[r.payment_method] || "—"}
                   </TableCell>
@@ -202,20 +175,20 @@ export default function Payroll() {
                   <TableCell className="px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                        className="h-7 px-2 text-xs text-slate-500 hover:text-slate-900"
                         onClick={() => setEditingRecord(r)}
                       >
-                        <Pencil className="h-3.5 w-3.5" />
+                        Edit
                       </Button>
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-destructive"
+                        className="h-7 px-2 text-xs text-slate-500 hover:text-destructive"
                         onClick={() => handleDelete(r.id)}
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
+                        Delete
                       </Button>
                     </div>
                   </TableCell>

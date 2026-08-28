@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Save, Globe, KeyRound, FileText } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -11,10 +10,9 @@ import {
   SheetFooter,
 } from "@/components/ui/sheet";
 
-function SectionHeader({ icon: Icon, title }) {
+function SectionHeader({ title }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-      <Icon className="h-4 w-4 text-slate-400" />
       <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
     </div>
   );
@@ -73,7 +71,7 @@ export default function DomainHostingSheet({ record, open, onSave, onClose }) {
 
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           <section className="space-y-3">
-            <SectionHeader icon={Globe} title="Item Details" />
+            <SectionHeader  title="Item Details" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Item Name" required>
                 <Input value={form.item_name} onChange={set("item_name")} className={inputCls} placeholder="mydomain.com / cPanel plan" />
@@ -121,7 +119,7 @@ export default function DomainHostingSheet({ record, open, onSave, onClose }) {
           </section>
 
           <section className="space-y-3">
-            <SectionHeader icon={KeyRound} title="Credentials" />
+            <SectionHeader  title="Credentials" />
             <div className="grid grid-cols-2 gap-3">
               <Field label="Username">
                 <Input value={form.username} onChange={set("username")} className={inputCls} />
@@ -138,7 +136,7 @@ export default function DomainHostingSheet({ record, open, onSave, onClose }) {
           </section>
 
           <section className="space-y-3">
-            <SectionHeader icon={FileText} title="Notes" />
+            <SectionHeader  title="Notes" />
             <textarea
               value={form.notes}
               onChange={set("notes")}
@@ -149,7 +147,6 @@ export default function DomainHostingSheet({ record, open, onSave, onClose }) {
 
           <SheetFooter className="mt-2">
             <Button type="submit" size="sm" className="bg-slate-900 hover:bg-slate-800">
-              <Save className="h-3.5 w-3.5" />
               {record ? "Save Changes" : "Add"}
             </Button>
           </SheetFooter>

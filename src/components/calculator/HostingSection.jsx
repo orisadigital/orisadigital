@@ -1,7 +1,6 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Check, Server, Leaf, Plus, ShieldCheck, Gauge } from "lucide-react";
 
 export const HOSTING_PLANS = [
   {
@@ -9,9 +8,9 @@ export const HOSTING_PLANS = [
     title: "2GB SSD Green Energy",
     desc: "Eco-friendly starter hosting",
     features: [
-      { label: "2GB SSD disk space", Icon: Server },
-      { label: "25GB bandwidth", Icon: Gauge },
-      { label: "SSL certificate", Icon: ShieldCheck },
+      { label: "2GB SSD disk space" },
+      { label: "25GB bandwidth" },
+      { label: "SSL certificate" },
     ],
     prices: { 1: 70, 3: 210 },
     isGreen: true,
@@ -21,9 +20,9 @@ export const HOSTING_PLANS = [
     title: "30GB SSD Hosting",
     desc: "High-performance hosting",
     features: [
-      { label: "30GB SSD disk space", Icon: Server },
-      { label: "Unmetered bandwidth", Icon: Gauge },
-      { label: "SSL certificate", Icon: ShieldCheck },
+      { label: "30GB SSD disk space" },
+      { label: "Unmetered bandwidth" },
+      { label: "SSL certificate" },
     ],
     prices: { 1: 150, 3: 450 },
     isGreen: false,
@@ -56,17 +55,6 @@ export default function HostingSection({ hosting, onChange, plans = HOSTING_PLAN
                 onClick={() => update("plan", selectedId === plan.id ? null : plan.id)}
                 className="w-full flex items-center gap-4 p-4 text-left"
               >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-700">
-                  {plan.isGreen ? (
-                    <div className="flex items-center">
-                      <Server className="h-4 w-4" />
-                      <Plus className="h-3 w-3 mx-0.5 text-slate-400" />
-                      <Leaf className="h-4 w-4 text-green-600" />
-                    </div>
-                  ) : (
-                    <Server className="h-5 w-5" />
-                  )}
-                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-slate-900">{plan.title}</p>
                   <p className="text-xs text-slate-500">{plan.desc}</p>
@@ -74,18 +62,12 @@ export default function HostingSection({ hosting, onChange, plans = HOSTING_PLAN
                 <div className="text-right shrink-0">
                   <p className="text-sm font-semibold text-slate-900">RM{plan.prices[1]}/yr</p>
                 </div>
-                {selected && (
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-slate-900 text-white">
-                    <Check className="h-3 w-3" />
-                  </span>
-                )}
               </button>
               {selected && (
                 <div className="px-4 pb-4 space-y-4">
                   <div className="rounded-lg bg-white border border-slate-200 p-4 space-y-2">
                     {plan.features.map((f, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-slate-700">
-                        <f.Icon className="h-4 w-4 text-slate-400" />
                         {f.label}
                       </div>
                     ))}

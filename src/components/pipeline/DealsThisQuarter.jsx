@@ -80,7 +80,7 @@ export default function DealsThisQuarter({ deals }) {
                 );
               }}
             />
-            <Bar dataKey="deals" fill="#0f172a" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="deals" fill="#000000" radius={0} />
           </BarChart>
         </ResponsiveContainer>
       </div>

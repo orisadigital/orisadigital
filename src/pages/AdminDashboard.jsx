@@ -1,41 +1,33 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { lazy, Suspense, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { LayoutDashboard, Bell, Calendar as CalendarIcon, Filter, UserPlus, FolderKanban, FileText, Receipt, Users, BookOpen, Globe, Package, Boxes, Banknote } from "lucide-react";
 import { useAuth } from "@/lib/AuthContext";
 import AdminSidebar from "@/components/admin/AdminSidebar";
-import Dashboard from "@/pages/admin/Dashboard";
-import Notifications from "@/pages/admin/Notifications";
-import Calendar from "@/pages/admin/Calendar";
-import Pipeline from "@/pages/admin/Pipeline";
-import Prospects from "@/pages/admin/Prospects";
-import Client from "@/pages/admin/Client";
-import Projects from "@/pages/admin/Projects";
-import Documents from "@/pages/admin/Documents";
-import Quotations from "@/pages/admin/Quotations";
-import Invoices from "@/pages/admin/Invoices";
-import KnowledgeBase from "@/pages/admin/KnowledgeBase";
-import Payroll from "@/pages/admin/Payroll";
-import DomainHosting from "@/pages/admin/DomainHosting";
-import SoftwarePlugin from "@/pages/admin/SoftwarePlugin";
-import Subscription from "@/pages/admin/Subscription";
-import { SalesAssistantProvider } from "@/components/dashboard/SalesAssistantContext";
+const Dashboard = lazy(() => import("@/pages/admin/Dashboard"));
+const Notifications = lazy(() => import("@/pages/admin/Notifications"));
+const Calendar = lazy(() => import("@/pages/admin/Calendar"));
+const Pipeline = lazy(() => import("@/pages/admin/Pipeline"));
+const Prospects = lazy(() => import("@/pages/admin/Prospects"));
+const Client = lazy(() => import("@/pages/admin/Client"));
+const Projects = lazy(() => import("@/pages/admin/Projects"));
+const Payroll = lazy(() => import("@/pages/admin/Payroll"));
+const DomainHosting = lazy(() => import("@/pages/admin/DomainHosting"));
+const SoftwarePlugin = lazy(() => import("@/pages/admin/SoftwarePlugin"));
+const Subscription = lazy(() => import("@/pages/admin/Subscription"));
+const AccountSettings = lazy(() => import("@/pages/admin/AccountSettings"));
 
 const PAGES = {
-  dashboard: { label: "Dashboard", Component: Dashboard, Icon: LayoutDashboard },
-  knowledge: { label: "Knowledge Base", Component: KnowledgeBase, Icon: BookOpen },
-  notifications: { label: "Notifications", Component: Notifications, Icon: Bell },
-  calendar: { label: "Calendar", Component: Calendar, Icon: CalendarIcon },
-  pipeline: { label: "Pipeline", Component: Pipeline, Icon: Filter },
-  prospects: { label: "Prospects", Component: Prospects, Icon: Users },
-  client: { label: "Clients", Component: Client, Icon: UserPlus },
-  projects: { label: "Projects", Component: Projects, Icon: FolderKanban },
-  documents: { label: "Documents", Component: Documents, Icon: FileText },
-  payroll: { label: "Payroll", Component: Payroll, Icon: Banknote },
-  quotations: { label: "Quotations", Component: Quotations, Icon: FileText },
-  invoices: { label: "Invoices", Component: Invoices, Icon: Receipt },
-  domain_hosting: { label: "Domains & Hosting", Component: DomainHosting, Icon: Globe },
-  software_plugins: { label: "Software & Plugins", Component: SoftwarePlugin, Icon: Package },
-  subscriptions: { label: "Subscriptions", Component: Subscription, Icon: Boxes },
+  dashboard: { label: "Dashboard", Component: Dashboard },
+  notifications: { label: "Notifications", Component: Notifications },
+  calendar: { label: "Calendar", Component: Calendar },
+  pipeline: { label: "Pipeline", Component: Pipeline },
+  prospects: { label: "Prospects", Component: Prospects },
+  client: { label: "Clients", Component: Client },
+  projects: { label: "Projects", Component: Projects },
+  payroll: { label: "Payroll", Component: Payroll },
+  domain_hosting: { label: "Domains & Hosting", Component: DomainHosting },
+  software_plugins: { label: "Software & Plugins", Component: SoftwarePlugin },
+  subscriptions: { label: "Subscriptions", Component: Subscription },
+  account: { label: "Account Settings", Component: AccountSettings },
 };
 
 const NAV_GROUPS = [
@@ -43,7 +35,6 @@ const NAV_GROUPS = [
     label: "Overview",
     items: [
       { id: "dashboard" },
-      { id: "knowledge" },
       { id: "notifications" },
       { id: "calendar" },
     ],
@@ -60,20 +51,12 @@ const NAV_GROUPS = [
     items: [
       { id: "client" },
       { id: "projects" },
-      { id: "documents" },
     ],
   },
   {
     label: "HR",
     items: [
       { id: "payroll" },
-    ],
-  },
-  {
-    label: "Accounting",
-    items: [
-      { id: "quotations" },
-      { id: "invoices" },
     ],
   },
   {
@@ -84,11 +67,16 @@ const NAV_GROUPS = [
       { id: "subscriptions" },
     ],
   },
+  {
+    label: "Account",
+    items: [
+      { id: "account" },
+    ],
+  },
 ];
 
 // Inject icons and labels into nav groups
 NAV_GROUPS.forEach((g) => g.items.forEach((item) => {
-  item.Icon = PAGES[item.id].Icon;
   item.label = PAGES[item.id].label;
 }));
 
@@ -111,7 +99,6 @@ export default function AdminDashboard() {
     setSearchParams({ page: pageId });
   }, [setSearchParams]);
 
-  const [collapsed, setCollapsed] = useState(false);
 
   const { user, logout, navigateToLogin } = useAuth();
 
@@ -119,7 +106,7 @@ export default function AdminDashboard() {
 
   if (user && user.email !== "orisa.digital@gmail.com") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 p-6">
+      <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <div className="max-w-md text-center">
           <h1 className="text-2xl font-semibold text-slate-900 mb-2">Access denied</h1>
           <p className="text-sm text-slate-500 mb-6">
@@ -147,28 +134,33 @@ export default function AdminDashboard() {
   }
 
   return (
-    <SalesAssistantProvider>
-      <div className="min-h-screen bg-slate-50">
-        <AdminSidebar
-          activePage={activePage}
-          onNavigate={handleNavigate}
-          collapsed={collapsed}
-          onToggleCollapse={() => setCollapsed((c) => !c)}
-          navGroups={NAV_GROUPS}
-          userEmail={user?.email}
-          onSignOut={() => logout()}
-          onSignIn={() => navigateToLogin("/admin")}
-        />
-        <div className={`transition-all duration-300 ${collapsed ? "ml-20" : "ml-64"}`}>
-          <main className="min-h-screen p-8 flex flex-col">
-            <div className="mb-6 shrink-0">
-              <p className="text-xs text-slate-400 uppercase tracking-wider">Orisa Digital Admin</p>
-              <h1 className="text-2xl font-semibold text-slate-900">{label}</h1>
-            </div>
+    <div className="min-h-screen bg-background">
+      <AdminSidebar
+        activePage={activePage}
+        onNavigate={handleNavigate}
+        navGroups={NAV_GROUPS}
+        userEmail={user?.email}
+        onSignOut={() => logout()}
+        onSignIn={() => navigateToLogin("/admin")}
+      />
+      <div className="ml-64">
+        <main className="min-h-screen p-8 flex flex-col">
+          <div className="mb-6 shrink-0">
+            <p className="text-xs text-slate-400 uppercase tracking-wider">Orisa Digital Admin</p>
+            <h1 className="text-2xl font-semibold text-slate-900">{label}</h1>
+          </div>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-20">
+                <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
+              </div>
+            }
+          >
             <Component key={activePage} />
-          </main>
-        </div>
+          </Suspense>
+        </main>
       </div>
-    </SalesAssistantProvider>
+    </div>
+
   );
 }

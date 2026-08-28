@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
-import { UserPlus, Trash2, Pencil, Plus } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,26 +32,9 @@ const SOURCE_STYLES = {
 };
 
 export default function Client() {
-  const [clients, setClients] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const { data: clients, setData: setClients, isLoading: loading, loadError } = useEntityList("Client", "-created_date");
   const [editingClient, setEditingClient] = useState(null);
   const [addingClient, setAddingClient] = useState(false);
-
-  useEffect(() => {
-    const loadClients = async () => {
-      try {
-        const data = await base44.entities.Client.list("-created_date");
-        setClients(data);
-      } catch (e) {
-        console.error("Failed to load clients", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadClients();
-  }, []);
 
   const handleDelete = async (clientId) => {
     try {
@@ -110,13 +93,11 @@ export default function Client() {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <UserPlus className="h-5 w-5 text-slate-400" />
           <span className="text-sm text-slate-500">
             {clients.length} client{clients.length !== 1 ? "s" : ""}
           </span>
         </div>
         <Button size="sm" className="bg-slate-900 hover:bg-slate-800" onClick={() => setAddingClient(true)} disabled={Boolean(loadError)}>
-          <Plus className="h-3.5 w-3.5" />
           Add Client
         </Button>
       </div>
@@ -186,21 +167,17 @@ export default function Client() {
                   <TableCell className="px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-slate-700"
                         onClick={() => setEditingClient(c)}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
+                      >Edit</Button>
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-destructive"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-destructive"
                         onClick={() => handleDelete(c.id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
+                      >Delete</Button>
                     </div>
                   </TableCell>
                 </TableRow>

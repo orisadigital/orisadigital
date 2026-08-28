@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 
 const todayStr = () => new Date().toISOString().split("T")[0];
 
@@ -42,7 +41,6 @@ export default function AddTaskForm({ onAddTask }) {
           />
         </div>
         <Button type="submit" className="w-full bg-slate-900 hover:bg-slate-800">
-          <Plus className="h-4 w-4 mr-2" />
           Add Task
         </Button>
       </form>

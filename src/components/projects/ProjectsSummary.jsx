@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, PieChart as PieIcon } from "lucide-react";
 
 const SOURCE_HEX = {
   website: "#3b82f6",
@@ -63,8 +62,7 @@ export default function ProjectsSummary({ projects, clientSourceMap }) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
       <Card className="border-slate-200">
         <CardContent className="p-5">
-          <div className="flex items-center justify-between">
-            <div>
+          <div>
               <p className="text-sm font-medium text-slate-500">Total Sale Amount</p>
               <p className="mt-1 text-3xl font-bold text-slate-900">
                 RM {totalSales.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -79,10 +77,6 @@ export default function ProjectsSummary({ projects, clientSourceMap }) {
                   <span className="text-slate-400"> · {recurringCount} {recurringCount === 1 ? "project" : "projects"}</span>
                 </p>
               )}
-            </div>
-            <div className="flex items-center justify-center h-12 w-12 rounded-full bg-emerald-100">
-              <TrendingUp className="h-6 w-6 text-emerald-600" />
-            </div>
           </div>
         </CardContent>
       </Card>
@@ -90,7 +84,6 @@ export default function ProjectsSummary({ projects, clientSourceMap }) {
       <Card className="border-slate-200">
         <CardContent className="p-5">
           <div className="flex items-center gap-2 mb-3">
-            <PieIcon className="h-4 w-4 text-slate-500" />
             <p className="text-sm font-medium text-slate-500">Source Distribution</p>
           </div>
           {hasSourceData ? (
@@ -113,7 +106,7 @@ export default function ProjectsSummary({ projects, clientSourceMap }) {
                   </Pie>
                   <Tooltip
                     formatter={(value, name) => [`${value} ${value === 1 ? "project" : "projects"}`, name]}
-                    contentStyle={{ borderRadius: "8px", border: "1px solid #e2e8f0", fontSize: "12px" }}
+                    contentStyle={{ borderRadius: "0px", border: "1px solid #e2e8f0", fontSize: "12px" }}
                   />
                   <Legend
                     verticalAlign="middle"

@@ -1,5 +1,4 @@
 import React from "react";
-import { AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -23,7 +22,6 @@ export default function LoadErrorBanner({ label, error, className }) {
         className
       )}
     >
-      <AlertTriangle className="h-4 w-4 text-rose-500 shrink-0 mt-0.5" />
       <div className="min-w-0">
         <p className="text-sm font-medium text-rose-900">Could not load {label}</p>
         <p className="text-xs text-rose-700 mt-0.5 break-words">{error}</p>

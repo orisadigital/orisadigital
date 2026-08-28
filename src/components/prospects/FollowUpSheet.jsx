@@ -2,11 +2,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { base44 } from "@/api/base44Client";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-hot-toast";
-import {
-  Plus,
-  Phone,
-  Clock,
-} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -43,10 +38,9 @@ export function FollowUpStatusDot({ status, className = "" }) {
   );
 }
 
-function SectionHeader({ icon: Icon, title }) {
+function SectionHeader({ title }) {
   return (
     <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
-      <Icon className="h-4 w-4 text-slate-400" />
       <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
     </div>
   );
@@ -169,14 +163,14 @@ export default function FollowUpSheet({ prospect, onProspectUpdate, onClose }) {
           </p>
           {prospect.contact_number && (
             <p className="flex items-center gap-1 text-sm text-slate-500">
-              <Phone className="h-3.5 w-3.5" /> {prospect.contact_number}
+               {prospect.contact_number}
             </p>
           )}
         </section>
 
         {/* Add New Follow-Up */}
         <form onSubmit={handleAddFollowUp} className="mt-6 space-y-4">
-          <SectionHeader icon={Plus} title="Add New Follow-Up" />
+          <SectionHeader  title="Add New Follow-Up" />
 
           <div className="grid grid-cols-1 gap-3">
             <div>
@@ -243,7 +237,6 @@ export default function FollowUpSheet({ prospect, onProspectUpdate, onClose }) {
             disabled={saving}
             className="w-full bg-slate-900 hover:bg-slate-800"
           >
-            <Plus className="h-3.5 w-3.5" />
             {saving ? "Adding..." : "Add Follow-Up"}
           </Button>
         </form>
@@ -251,7 +244,7 @@ export default function FollowUpSheet({ prospect, onProspectUpdate, onClose }) {
         {/* History Timeline */}
         <section className="mt-8 space-y-3">
           <SectionHeader
-            icon={Clock}
+            
             title={`Follow-Up History (${history.length})`}
           />
 

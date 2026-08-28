@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,  useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
-import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import {
   Table,
@@ -44,38 +44,22 @@ const SOURCE_LABELS = {
 };
 
 export default function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [clientSourceMap, setClientSourceMap] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const projectsQ = useEntityList("Project", "-created_date");
+  const clientsQ = useEntityList("Client", "-created_date");
+
+  const projects = projectsQ.data;
+  const setProjects = projectsQ.setData;
+  const loading = projectsQ.isLoading || clientsQ.isLoading;
+  const loadError = projectsQ.loadError || clientsQ.loadError;
+  const clientSourceMap = useMemo(
+    () => Object.fromEntries(clientsQ.data.map((c) => [c.id, c.inquiry_source])),
+    [clientsQ.data]
+  );
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingProject, setEditingProject] = useState(null);
 
   const oneOffProjects = projects.filter((p) => !p.is_recurring);
   const recurringProjects = projects.filter((p) => p.is_recurring);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [projectData, clientData] = await Promise.all([
-          base44.entities.Project.list("-created_date"),
-          base44.entities.Client.list("-created_date"),
-        ]);
-        setProjects(projectData);
-        setClientSourceMap(
-          Object.fromEntries(
-            clientData.map((c) => [c.id, c.inquiry_source])
-          )
-        );
-      } catch (e) {
-        console.error("Failed to load projects", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadData();
-  }, []);
 
   const handleAddClick = () => {
     setEditingProject(null);
@@ -139,7 +123,6 @@ export default function Projects() {
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-slate-900">Projects</h2>
         <Button size="sm" onClick={handleAddClick} className="bg-slate-900 hover:bg-slate-800" disabled={Boolean(loadError)}>
-          <Plus className="h-4 w-4" />
           Add Project
         </Button>
       </div>
@@ -240,21 +223,17 @@ export default function Projects() {
                   <TableCell className="px-4 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-slate-700"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-slate-700"
                         onClick={() => handleEditClick(p)}
-                      >
-                        <Pencil className="h-3.5 w-3.5" />
-                      </Button>
+                      >Edit</Button>
                       <Button
-                        size="icon"
+                        size="sm"
                         variant="ghost"
-                        className="h-7 w-7 text-slate-400 hover:text-destructive"
+                        className="text-xs h-7 px-2 text-slate-400 hover:text-destructive"
                         onClick={() => handleDelete(p)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
+                      >Delete</Button>
                     </div>
                   </TableCell>
                 </TableRow>

@@ -11,7 +11,6 @@ import {
   eachDayOfInterval,
   addMonths,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, Plus, Check, Pencil, Trash2, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -81,9 +80,10 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
         <div className="flex items-center gap-3">
           <button
             onClick={openAdd}
-            className="h-8 w-8 rounded-lg bg-white border border-slate-200 shadow-sm flex items-center justify-center hover:bg-slate-50 transition-colors"
+            className="h-8 w-8 rounded-lg bg-white border border-slate-200 shadow-sm flex items-center justify-center text-lg leading-none text-slate-600 hover:bg-slate-50 transition-colors"
           >
-            <Plus className="h-4 w-4 text-slate-700" />
+            <span aria-hidden="true">+</span>
+            <span className="sr-only">Add task</span>
           </button>
           <h2 className="text-lg font-semibold text-slate-900">
             {format(month, "MMMM yyyy")}
@@ -92,15 +92,17 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
         <div className="flex items-center gap-1">
           <button
             onClick={() => setMonth(addMonths(month, -1))}
-            className="p-2 rounded-lg hover:bg-slate-100 text-slate-500"
+            className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 text-lg leading-none"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <span aria-hidden="true">‹</span>
+            <span className="sr-only">Previous month</span>
           </button>
           <button
             onClick={() => setMonth(addMonths(month, 1))}
-            className="p-2 rounded-lg hover:bg-slate-100 text-slate-500"
+            className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 text-lg leading-none"
           >
-            <ChevronRight className="h-4 w-4" />
+            <span aria-hidden="true">›</span>
+            <span className="sr-only">Next month</span>
           </button>
         </div>
       </div>
@@ -131,11 +133,9 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
             type="button"
             size="sm"
             variant="outline"
-            className="h-8"
+            className="text-xs h-8"
             onClick={() => setShowForm(false)}
-          >
-            <X className="h-3 w-3" />
-          </Button>
+          >Cancel</Button>
         </form>
       )}
 
@@ -220,16 +220,12 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
                       <div className="flex gap-0.5">
                         <button
                           onClick={() => saveEdit(task.id)}
-                          className="p-0.5 rounded hover:bg-blue-100 text-blue-600"
-                        >
-                          <Check className="h-3 w-3" />
-                        </button>
+                          className="text-xs p-0.5 rounded hover:bg-blue-100 text-blue-600"
+                        >Save</button>
                         <button
                           onClick={() => setEditingId(null)}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-500"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
+                          className="text-xs p-0.5 rounded hover:bg-slate-200 text-slate-500"
+                        >Cancel</button>
                       </div>
                     </div>
                   ) : (
@@ -261,19 +257,15 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
                             e.stopPropagation();
                             startEdit(task);
                           }}
-                          className="p-0.5 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700"
-                        >
-                          <Pencil className="h-2.5 w-2.5" />
-                        </button>
+                          className="text-xs p-0.5 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700"
+                        >Edit</button>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             onDelete?.(task.id);
                           }}
-                          className="p-0.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
-                        >
-                          <Trash2 className="h-2.5 w-2.5" />
-                        </button>
+                          className="text-xs p-0.5 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
+                        >Delete</button>
                       </div>
                     </div>
                   )
@@ -332,16 +324,14 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
                         }}
                         className="h-8 bg-slate-900 hover:bg-slate-800"
                       >
-                        <Check className="h-3.5 w-3.5" /> Save
+                         Save
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setEditingId(null)}
-                        className="h-8"
-                      >
-                        <X className="h-3.5 w-3.5" />
-                      </Button>
+                        className="text-xs h-8"
+                      >Cancel</Button>
                     </div>
                   </div>
                 ) : (
@@ -367,16 +357,12 @@ export default function CalendarPanel({ tasks, onAddTask, onComplete, onUpdate, 
                     <div className="flex items-center gap-1 opacity-0 group-hover/task:opacity-100">
                       <button
                         onClick={() => startEdit(task)}
-                        className="p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700"
-                      >
-                        <Pencil className="h-3 w-3" />
-                      </button>
+                        className="text-xs p-1 rounded hover:bg-slate-200 text-slate-400 hover:text-slate-700"
+                      >Edit</button>
                       <button
                         onClick={() => onDelete?.(task.id)}
-                        className="p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
+                        className="text-xs p-1 rounded hover:bg-red-50 text-slate-400 hover:text-red-600"
+                      >Delete</button>
                     </div>
                   </div>
                 )

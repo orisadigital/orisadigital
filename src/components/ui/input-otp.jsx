@@ -1,6 +1,5 @@
 import * as React from "react"
 import { OTPInput, OTPInputContext } from "input-otp"
-import { Minus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -45,7 +44,6 @@ InputOTPSlot.displayName = "InputOTPSlot"
 
 const InputOTPSeparator = React.forwardRef(({ ...props }, ref) => (
   <div ref={ref} role="separator" {...props}>
-    <Minus />
   </div>
 ))
 InputOTPSeparator.displayName = "InputOTPSeparator"

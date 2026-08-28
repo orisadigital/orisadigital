@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import WhatsAppIcon from "@/components/WhatsAppIcon";
 import SignaturePad from "@/components/SignaturePad";
 import SuccessMessage from "@/components/SuccessMessage";
@@ -138,7 +137,7 @@ export default function WebsiteDesignClientBrief() {
     setSubmitError("");
     try {
       const signatureDataUrl = signatureRef.current?.getDataURL();
-      const doc = generateBriefPDF(formData, signatureDataUrl);
+      const doc = await generateBriefPDF(formData, signatureDataUrl);
       const pdfBlob = doc.output("blob");
       const file = new File([pdfBlob], "website-design-brief.pdf", { type: "application/pdf" });
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
@@ -496,7 +495,6 @@ export default function WebsiteDesignClientBrief() {
             >
               {submitting ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                   Submitting...
                 </>
               ) : (

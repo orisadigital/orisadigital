@@ -1,29 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import CalendarPanel from "@/components/calendar/CalendarPanel";
 import TaskList from "@/components/calendar/TaskList";
 import LoadErrorBanner from "@/components/admin/LoadErrorBanner";
 
 export default function Calendar() {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
-
-  const loadTasks = async () => {
-    try {
-      const data = await base44.entities.Task.list();
-      setTasks(data);
-    } catch (e) {
-      console.error("Failed to load tasks", e);
-      setLoadError(e?.message || "Unknown error");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadTasks();
-  }, []);
+  const { data: tasks, setData: setTasks, isLoading: loading, loadError } = useEntityList("Task");
 
   const handleAddTask = async (task) => {
     const created = await base44.entities.Task.create(task);

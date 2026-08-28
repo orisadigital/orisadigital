@@ -46,9 +46,9 @@ export default function StageDistribution({ deals }) {
                 );
               }}
             />
-            <Bar dataKey="count" radius={[0, 4, 4, 0]}>
+            <Bar dataKey="count" radius={0}>
               {data.map((entry) => (
-                <Cell key={entry.id} fill={STAGE_COLORS[entry.id] || "#0f172a"} />
+                <Cell key={entry.id} fill={STAGE_COLORS[entry.id] || "#000000"} />
               ))}
             </Bar>
           </BarChart>

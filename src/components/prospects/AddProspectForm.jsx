@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { UserPlus, Save, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -60,11 +59,6 @@ export default function AddProspectForm({
   return (
     <div className="bg-white border border-slate-200 rounded-lg">
       <div className="flex items-center gap-2 px-4 py-3 border-b border-slate-100">
-        {isEditing ? (
-          <Save className="h-4 w-4 text-slate-500" />
-        ) : (
-          <UserPlus className="h-4 w-4 text-slate-500" />
-        )}
         <h3 className="text-sm font-semibold text-slate-900">
           {isEditing ? "Edit Prospect" : "Add Prospect"}
         </h3>
@@ -141,20 +135,16 @@ export default function AddProspectForm({
           <Button type="submit" size="sm" className="flex-1 bg-slate-900 hover:bg-slate-800">
             {isEditing ? (
               <>
-                <Save className="h-3.5 w-3.5" />
                 Save Changes
               </>
             ) : (
               <>
-                <UserPlus className="h-3.5 w-3.5" />
                 Add Prospect
               </>
             )}
           </Button>
           {isEditing && (
-            <Button type="button" size="sm" variant="outline" onClick={handleCancel}>
-              <X className="h-3.5 w-3.5" />
-            </Button>
+            <Button type="button" size="sm" variant="outline" onClick={handleCancel}>Cancel</Button>
           )}
         </div>
       </form>
