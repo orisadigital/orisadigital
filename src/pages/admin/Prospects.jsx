@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
+import { useEntityList } from "@/hooks/useEntityList";
 import { format, parseISO } from "date-fns";
 import { toast } from "react-hot-toast";
 import ProspectEditSheet from "@/components/prospects/ProspectEditSheet";
@@ -59,73 +60,65 @@ const DEAL_STAGE_TO_STATUS = {
 };
 
 export default function Prospects() {
-  const [prospects, setProspects] = useState([]);
-  const [followUpCounts, setFollowUpCounts] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState(null);
+  const prospectsQ = useEntityList("Prospect", "-created_date");
+  const dealsQ = useEntityList("Deal", "-created_date");
+  const followUpsQ = useEntityList("FollowUp", "-created_date");
   const [statusFilter, setStatusFilter] = useState("all");
+
+  const loading = prospectsQ.isLoading || dealsQ.isLoading || followUpsQ.isLoading;
+  const loadError = prospectsQ.loadError || dealsQ.loadError || followUpsQ.loadError;
+
+  const followUpCounts = useMemo(() => {
+    const counts = {};
+    followUpsQ.data.forEach((f) => {
+      counts[f.prospect_id] = (counts[f.prospect_id] || 0) + 1;
+    });
+    return counts;
+  }, [followUpsQ.data]);
+
+  // Prospect and Deal rows share one list, so they are normalised to a common
+  // shape here — derived from the two caches rather than copied into state, so
+  // there is no second source of truth to drift.
+  const prospects = useMemo(() => {
+    const dealsAsProspects = dealsQ.data.map((d) => ({
+      id: d.id,
+      _origin: "deal",
+      prospect_name: d.contact_name || d.deal_name,
+      company_name: d.company_name,
+      contact_email: "",
+      contact_number: d.contact_number,
+      inquiry_source: d.inquiry_source || "website",
+      date_received: d.date,
+      status: DEAL_STAGE_TO_STATUS[d.stage] || "new",
+      follow_up_status: d.follow_up_status || "interested",
+      next_follow_up: d.next_follow_up || "",
+      follow_up_notes: d.follow_up_notes || "",
+      amount: d.amount || 0,
+      updated_date: d.updated_date,
+    }));
+    const prospectsTagged = prospectsQ.data.map((p) => ({ ...p, _origin: "prospect" }));
+    const all = [...prospectsTagged, ...dealsAsProspects];
+    all.sort(
+      (a, b) =>
+        (STATUS_ORDER[a.follow_up_status] ?? 99) -
+        (STATUS_ORDER[b.follow_up_status] ?? 99)
+    );
+    return all;
+  }, [prospectsQ.data, dealsQ.data]);
+
+  // A row's edits go back to whichever cached list it came from.
+  const patchSource = (item, changes) =>
+    (item._origin === "deal" ? dealsQ.setData : prospectsQ.setData)((prev) =>
+      prev.map((r) => (r.id === item.id ? { ...r, ...changes } : r))
+    );
+  const removeSource = (item) =>
+    (item._origin === "deal" ? dealsQ.setData : prospectsQ.setData)((prev) =>
+      prev.filter((r) => r.id !== item.id)
+    );
 
   const visibleProspects = statusFilter === "all"
     ? prospects
     : prospects.filter((p) => p.follow_up_status === statusFilter);
-
-  useEffect(() => {
-    const loadProspects = async () => {
-      try {
-        const [prospectData, dealData, followUpData] = await Promise.all([
-          base44.entities.Prospect.list("-created_date"),
-          base44.entities.Deal.list("-created_date"),
-          base44.entities.FollowUp.list("-created_date"),
-        ]);
-        const counts = {};
-        followUpData.forEach((f) => {
-          counts[f.prospect_id] = (counts[f.prospect_id] || 0) + 1;
-        });
-        setFollowUpCounts(counts);
-        const dealsAsProspects = dealData.map((d) => ({
-          id: d.id,
-          _origin: "deal",
-          prospect_name: d.contact_name || d.deal_name,
-          company_name: d.company_name,
-          contact_email: "",
-          contact_number: d.contact_number,
-          inquiry_source: d.inquiry_source || "website",
-          date_received: d.date,
-          status: DEAL_STAGE_TO_STATUS[d.stage] || "new",
-          follow_up_status: d.follow_up_status || "interested",
-          next_follow_up: d.next_follow_up || "",
-          follow_up_notes: d.follow_up_notes || "",
-          amount: d.amount || 0,
-          updated_date: d.updated_date,
-        }));
-        const prospectsTagged = prospectData.map((p) => ({ ...p, _origin: "prospect" }));
-        const all = [...prospectsTagged, ...dealsAsProspects];
-        all.sort(
-          (a, b) =>
-            (STATUS_ORDER[a.follow_up_status] ?? 99) -
-            (STATUS_ORDER[b.follow_up_status] ?? 99)
-        );
-        setProspects(all);
-      } catch (e) {
-        console.error("Failed to load prospects", e);
-        setLoadError(e?.message || "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProspects();
-  }, []);
-
-  const handleStatusChange = async (prospectId, newStatus) => {
-    const item = prospects.find((p) => p.id === prospectId);
-    if (!item) return;
-    setProspects((prev) =>
-      prev.map((p) => (p.id === prospectId ? { ...p, status: newStatus } : p))
-    );
-    if (item._origin === "prospect") {
-      await base44.entities.Prospect.update(prospectId, { status: newStatus });
-    }
-  };
 
   const [convertingId, setConvertingId] = useState(null);
   const [editingProspect, setEditingProspect] = useState(null);
@@ -136,13 +129,11 @@ export default function Prospects() {
   };
 
   const handleFollowUpUpdate = (prospectId, changes) => {
-    setProspects((prev) =>
-      prev.map((p) => (p.id === prospectId ? { ...p, ...changes } : p))
-    );
-    setFollowUpCounts((prev) => ({
-      ...prev,
-      [prospectId]: (prev[prospectId] || 0) + 1,
-    }));
+    const item = prospects.find((p) => p.id === prospectId);
+    if (item) patchSource(item, changes);
+    // The FollowUp row is created by the sheet, so refetch rather than guess
+    // the new count optimistically.
+    followUpsQ.refetch();
   };
 
   const handleCancelEdit = () => {
@@ -150,28 +141,32 @@ export default function Prospects() {
   };
 
   const handleUpdateProspect = async (updated) => {
+    // The same payload goes to the database and to the cache, so the row on
+    // screen cannot disagree with what was written.
+    const payload =
+      updated._origin === "deal"
+        ? {
+            contact_name: updated.prospect_name,
+            company_name: updated.company_name,
+            contact_number: updated.contact_number,
+            inquiry_source: updated.inquiry_source,
+            date: updated.date_received,
+          }
+        : {
+            prospect_name: updated.prospect_name,
+            company_name: updated.company_name,
+            contact_email: updated.contact_email,
+            contact_number: updated.contact_number,
+            inquiry_source: updated.inquiry_source,
+            notes: updated.notes,
+            date_received: updated.date_received,
+          };
     if (updated._origin === "deal") {
-      await base44.entities.Deal.update(updated.id, {
-        contact_name: updated.prospect_name,
-        company_name: updated.company_name,
-        contact_number: updated.contact_number,
-        inquiry_source: updated.inquiry_source,
-        date: updated.date_received,
-      });
+      await base44.entities.Deal.update(updated.id, payload);
     } else {
-      await base44.entities.Prospect.update(updated.id, {
-        prospect_name: updated.prospect_name,
-        company_name: updated.company_name,
-        contact_email: updated.contact_email,
-        contact_number: updated.contact_number,
-        inquiry_source: updated.inquiry_source,
-        notes: updated.notes,
-        date_received: updated.date_received,
-      });
+      await base44.entities.Prospect.update(updated.id, payload);
     }
-    setProspects((prev) =>
-      prev.map((p) => (p.id === updated.id ? { ...p, ...updated } : p))
-    );
+    patchSource(updated, payload);
     toast.success("Prospect updated");
     setEditingProspect(null);
   };
@@ -207,7 +202,7 @@ export default function Prospects() {
       } else {
         await base44.entities.Prospect.delete(prospect.id);
       }
-      setProspects((prev) => prev.filter((p) => p.id !== prospect.id));
+      removeSource(prospect);
       toast.success("Prospect deleted");
     } catch (e) {
       console.error("Failed to delete prospect", e);
