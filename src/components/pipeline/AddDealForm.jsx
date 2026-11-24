@@ -12,6 +12,7 @@ const EMPTY_FORM = {
   company_name: "",
   contact_name: "",
   contact_number: "",
+  contact_email: "",
   amount: "",
   stage: "online_prospect",
   inquiry_source: "website",
@@ -75,6 +76,16 @@ export default function AddDealForm({ onAddDeal }) {
               className="mt-1.5"
             />
           </div>
+        </div>
+        <div>
+          <Label className="text-sm font-medium text-slate-700">Email</Label>
+          <Input
+            type="email"
+            value={form.contact_email}
+            onChange={(e) => update("contact_email", e.target.value)}
+            placeholder="john@abccorp.com"
+            className="mt-1.5"
+          />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>

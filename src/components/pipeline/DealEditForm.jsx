@@ -10,6 +10,7 @@ export default function DealEditForm({ deal, onSave, onCancel }) {
     company_name: deal.company_name || "",
     contact_name: deal.contact_name || "",
     contact_number: deal.contact_number || "",
+    contact_email: deal.contact_email || "",
     amount: deal.amount || "",
     stage: deal.stage || "online_prospect",
     inquiry_source: deal.inquiry_source || "website",
@@ -38,6 +39,7 @@ export default function DealEditForm({ deal, onSave, onCancel }) {
         <Input value={form.contact_name} onChange={(e) => update("contact_name", e.target.value)} placeholder="Contact" className="h-8 text-sm" />
         <Input value={form.contact_number} onChange={(e) => update("contact_number", e.target.value)} placeholder="Number" className="h-8 text-sm" />
       </div>
+      <Input type="email" value={form.contact_email} onChange={(e) => update("contact_email", e.target.value)} placeholder="Email" className="h-8 text-sm" />
       <div className="grid grid-cols-2 gap-2">
         <Input type="number" value={form.amount} onChange={(e) => update("amount", e.target.value)} placeholder="Amount" className="h-8 text-sm" />
         <Input type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className="h-8 text-sm" />

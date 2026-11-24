@@ -85,7 +85,7 @@ export default function Prospects() {
       _origin: "deal",
       prospect_name: d.contact_name || d.deal_name,
       company_name: d.company_name,
-      contact_email: "",
+      contact_email: d.contact_email || "",
       contact_number: d.contact_number,
       inquiry_source: d.inquiry_source || "website",
       date_received: d.date,
@@ -148,6 +148,7 @@ export default function Prospects() {
         ? {
             contact_name: updated.prospect_name,
             company_name: updated.company_name,
+            contact_email: updated.contact_email,
             contact_number: updated.contact_number,
             inquiry_source: updated.inquiry_source,
             date: updated.date_received,
