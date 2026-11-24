@@ -104,13 +104,15 @@ export default function AdminDashboard() {
 
   const { Component, label } = PAGES[activePage];
 
-  if (user && user.email !== "orisa.digital@gmail.com") {
+  // Gate on the profile role, not one hard-coded email, so other admins can be
+  // added by setting profiles.role = 'admin' in Supabase.
+  if (user && user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-6">
         <div className="max-w-md text-center">
           <h1 className="text-2xl font-semibold text-slate-900 mb-2">Access denied</h1>
           <p className="text-sm text-slate-500 mb-6">
-            You are signed in as <span className="font-medium text-slate-700">{user.email}</span>, but only the admin account can access this dashboard.
+            You are signed in as <span className="font-medium text-slate-700">{user.email}</span>, but only admin accounts can access this dashboard.
           </p>
           <div className="flex flex-col gap-3 items-center">
             <button
